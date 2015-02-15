@@ -6,6 +6,11 @@
 
 ## ToDo
 
+* <del>ページに埋め込み</del>
+* <del>コメントできる</del>
+
+## 機能
+
 * Auth パッケージと連携
 * ツリー形式のコメント
 	* [Isso – a commenting server similar to Disqus](http://posativ.org/isso/)
@@ -33,3 +38,5 @@
 			* HTMLタグをエスケープしないと、、、
 		* wysiwyg
 * リプライ機能
+* [recaptcha](http://www.google.com/recaptcha/intro/index.html) で CAPTCHA 表示
+* [Gravatar - Globally Recognized Avatars](https://en.gravatar.com/) でアイコン表示
