@@ -280,7 +280,6 @@ EOD;
 				$model = new Model_Commentbox();
 				$model->from_array($form->validation()->validated());
 				$model->comment_key = $comment_key;
-				$model->hash = '*';
 				$model->user_id = -1;
 				$model->child($root)->save();
 

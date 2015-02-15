@@ -16,7 +16,6 @@ class Create_commentboxes
 			'email' => array('constraint' => 255, 'type' => 'varchar'),
 			'website' => array('type' => 'text'),
 			'body' => array('type' => 'text'),
-			'hash' => array('constraint' => 64, 'type' => 'varchar'),
 			'created_at' => array('constraint' => 11, 'type' => 'int', 'null' => true),
 			'updated_at' => array('constraint' => 11, 'type' => 'int', 'null' => true),
 

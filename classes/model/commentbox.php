@@ -14,7 +14,6 @@ class Model_Commentbox extends \Orm\Model_Nestedset
 		'email',
 		'website',
 		'body',
-		'hash',
 		'created_at',
 		'updated_at',
 	);
@@ -55,7 +54,6 @@ class Model_Commentbox extends \Orm\Model_Nestedset
 		$root->email = '';
 		$root->website = '';
 		$root->body = '';
-		$root->hash = '';
 		$root->save();
 
 		return $root;
