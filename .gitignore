@@ -1,0 +1,6 @@
+/development/fuelphp
+/development/.vagrant
+*.bak
+Thumbs.db
+desktop.ini
+.DS_Store
