@@ -10,6 +10,7 @@ class Create_commentboxes
 			'id' => array('constraint' => 11, 'type' => 'int', 'auto_increment' => true, 'unsigned' => true),
 			'left_id' => array('constraint' => 11, 'type' => 'int', 'unsigned' => true),
 			'right_id' => array('constraint' => 11, 'type' => 'int', 'unsigned' => true),
+			'tree_id' => array('constraint' => 11, 'type' => 'int', 'unsigned' => true),
 			'comment_key' => array('constraint' => 50, 'type' => 'varchar'),
 			'user_id' => array('constraint' => 11, 'type' => 'int'),
 			'name' => array('constraint' => 50, 'type' => 'varchar'),
@@ -18,8 +19,10 @@ class Create_commentboxes
 			'body' => array('type' => 'text'),
 			'created_at' => array('constraint' => 11, 'type' => 'int', 'null' => true),
 			'updated_at' => array('constraint' => 11, 'type' => 'int', 'null' => true),
-
 		), array('id'));
+
+		\DB::query('ALTER TABLE `commentboxes` ADD KEY(`left_id`)')->execute();
+		\DB::query('ALTER TABLE `commentboxes` ADD KEY(`right_id`)')->execute();
 	}
 
 	public function down()

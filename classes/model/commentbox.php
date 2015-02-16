@@ -8,6 +8,7 @@ class Model_Commentbox extends \Orm\Model_Nestedset
 		'id',
 		'left_id',
 		'right_id',
+		'tree_id',
 		'comment_key',
 		'user_id',
 		'name',
@@ -30,6 +31,9 @@ class Model_Commentbox extends \Orm\Model_Nestedset
 	);
 
 	protected static $_tree = array(
+		'left_field' => 'left_id',
+		'right_field' => 'right_id',
+		'tree_field' => 'tree_id',
 		'title_field' => 'comment_key',
 	);
 
