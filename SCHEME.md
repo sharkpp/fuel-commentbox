@@ -6,8 +6,7 @@
 
 ## ToDo
 
-* <del>ページに埋め込み</del>
-* <del>コメントできる</del>
+* リプライ
 
 ## 機能
 
@@ -30,8 +29,11 @@
 	* 名前表示
 		* ログイン時は Auth パッケージから引っ張ってくる
 	* アイコン表示
+		* [Gravatar - Globally Recognized Avatars](https://en.gravatar.com/) でアイコン表示
+		* [RoboHash](http://robohash.org/)
+		* [Identicon](http://www.radiumsoftware.com/0702.html)
 	* いつ投稿したか
-		* `an hour ago` 的な表示
+		* <del>`an hour ago` 的な表示</del>
 	* メッセージ本文
 		* プレーンテキスト
 		* MarkDownでかけるように？
@@ -39,4 +41,3 @@
 		* wysiwyg
 * リプライ機能
 * [recaptcha](http://www.google.com/recaptcha/intro/index.html) で CAPTCHA 表示
-* [Gravatar - Globally Recognized Avatars](https://en.gravatar.com/) でアイコン表示

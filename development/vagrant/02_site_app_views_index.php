@@ -13,6 +13,38 @@
 
     <div class="container">
 
+<?php $error = \Session::get_flash('error');
+      if ($error): ?>
+<div class="alert alert-danger" role="alert">
+  <?php echo e($error); ?>
+</div>
+<?php endif; ?>
+
+<div class="panel panel-default">
+  <div class="panel-body">
+<?php if ( ! \Auth::check()): ?>
+    <form class="form-inline" method="post">
+      <?php echo \Form::csrf(); ?>
+      <div class="form-group">
+        <label class="sr-only" for="inputUsername">Username</label>
+        <input type="username" name="username" class="form-control" id="inputUsername" placeholder="Enter username">
+      </div>
+      <div class="form-group">
+        <label class="sr-only" for="inputPassword">Password</label>
+        <input type="password" name="password" class="form-control" id="inputPassword" placeholder="Password">
+      </div>
+      <button type="submit" class="btn btn-default" name="signin">Sign in</button>
+    </form>
+<?php else: ?>
+    <form class="form-inline" method="post">
+      <?php echo \Form::csrf(); ?>
+      Logged in : <?php echo Auth::get('username'); ?>
+      <button type="submit" class="btn btn-default" name="signout">Sign out</button>
+    </form>
+<?php endif; ?>
+  </div>
+</div>
+
 <div class="panel panel-default">
   <div class="panel-body">
 <?php echo $commentbox_form; ?>

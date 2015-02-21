@@ -7,6 +7,7 @@ return array(
 	'log_threshold' => Fuel::L_ALL,
 	'always_load' => array(
 		'packages' => array(
+			'auth',
 			'orm',
 			'commentbox',
 		),

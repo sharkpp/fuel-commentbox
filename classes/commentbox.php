@@ -296,7 +296,7 @@ EOD;
 		{
 		}
 
-		return ;
+		return true;
 	}
 
 	public function error()

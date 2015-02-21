@@ -81,6 +81,8 @@ cp $TMPL_DIR/02_site_app_config.php fuel/app/config/development/config.php
 
 cp $TMPL_DIR/02_site_app_config_routes.php fuel/app/config/development/routes.php
 
+cp $TMPL_DIR/02_site_app_config_auth.php fuel/app/config/development/auth.php
+
 cp $TMPL_DIR/02_site_app_controller_test.php fuel/app/classes/controller/test.php
 
 mkdir -p fuel/app/views/test
