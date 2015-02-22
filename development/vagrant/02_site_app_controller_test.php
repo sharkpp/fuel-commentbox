@@ -26,7 +26,8 @@ class Controller_Test extends Controller
 		if (\Auth::check())
 		{
 			$validation_signin
-				->add('signout', 'signout');
+				->add('signout', 'signout')
+				->add_rule('required');
 		}
 		else
 		{

@@ -22,9 +22,9 @@
 
 <div class="panel panel-default">
   <div class="panel-body">
-<?php if ( ! \Auth::check()): ?>
-    <form class="form-inline" method="post">
+    <form class="form-inline pull-right" method="post">
       <?php echo \Form::csrf(); ?>
+<?php if ( ! \Auth::check()): ?>
       <div class="form-group">
         <label class="sr-only" for="inputUsername">Username</label>
         <input type="username" name="username" class="form-control" id="inputUsername" placeholder="Enter username">
@@ -34,14 +34,11 @@
         <input type="password" name="password" class="form-control" id="inputPassword" placeholder="Password">
       </div>
       <button type="submit" class="btn btn-default" name="signin">Sign in</button>
-    </form>
 <?php else: ?>
-    <form class="form-inline" method="post">
-      <?php echo \Form::csrf(); ?>
       Logged in : <?php echo Auth::get('username'); ?>
-      <button type="submit" class="btn btn-default" name="signout">Sign out</button>
-    </form>
+      <button type="submit" class="btn btn-default" name="signout" value="Sign out">Sign out</button>
 <?php endif; ?>
+    </form>
   </div>
 </div>
 

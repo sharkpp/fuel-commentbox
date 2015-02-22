@@ -111,15 +111,18 @@ class Commentbox
 			$this->fieldset
 				->add('comment_key', '')
 				->add_rule('match_value', $this->comment_key, true);
-			$this->fieldset
-				->add('name', '名前', array('class' => 'form-control'))
-				->add_rule('trim')
-				->add_rule('max_length', 50);
-			$this->fieldset
-				->add('email', 'メールアドレス', array('type' => 'email', 'class' => 'form-control'))
-				->add_rule('trim')
-				->add_rule('valid_email')
-				->add_rule('max_length', 255);
+			if ( ! \Auth::check())
+			{
+				$this->fieldset
+					->add('name', '名前', array('class' => 'form-control'))
+					->add_rule('trim')
+					->add_rule('max_length', 50);
+				$this->fieldset
+					->add('email', 'メールアドレス', array('type' => 'email', 'class' => 'form-control'))
+					->add_rule('trim')
+					->add_rule('valid_email')
+					->add_rule('max_length', 255);
+			}
 			$this->fieldset
 				->add('website', 'ウェブサイト', array('type' => 'url', 'class' => 'form-control'))
 				->add_rule('trim')
@@ -129,7 +132,7 @@ class Commentbox
 				->add_rule('trim')
 				->add_rule('required');
 			$this->fieldset
-				->add('submit', '', array('type'=>'submit', 'value' => '確認', 'class' => 'form-control'));
+				->add('submit', '', array('type'=>'submit', 'value' => '送信', 'class' => 'form-control'));
 		}
 
 		return $this->fieldset;
@@ -185,6 +188,12 @@ EOD;
 			
 		}
 
+		if (\Auth::check())
+		{
+			$html = str_replace('{name_field}',  '', $html);
+			$html = str_replace('{email_field}', '', $html);
+		}
+
 		$html = str_replace('{submit}',
 		                    \Form::submit($form->field('submit')->name,
 		                                  $form->field('submit')->get_attribute('value')),
@@ -211,12 +220,11 @@ EOD;
 <hr>
 <div class="media">
 	<div class="media-left">
-		<span class="media-object img-thumbnail" style="width: 64px; height: 64px; background-color: #eee"></span>
+		<span class="media-object">{icon}</span>
 	</div>
 	<div class="media-body">
-		<h4 class="media-heading">{name} <small>{time}</small></h4>
+		<h4 class="media-heading">{name} ({email}) <small>{time}</small></h4>
 		{body}
-	{email}<br>
 {child}
 	</div>
 </div>
@@ -226,11 +234,18 @@ EOD;
 				$html = '';
 				foreach ($tree as $item)
 				{
+					$user_info = self::get_user_info(
+									$item['user_id'],
+									array(
+										'name' => $item['name'],
+										'email' => $item['email']
+									));
 					$tmp = $template;
 					$tmp = str_replace('{body}', $item['body'], $tmp);
-					$tmp = str_replace('{name}', empty($item['name']) ? '匿名' : $item['name'], $tmp);
-					$tmp = str_replace('{email}', $item['email'], $tmp);
+					$tmp = str_replace('{name}', empty($user_info['name']) ? '匿名' : $user_info['name'], $tmp);
+					$tmp = str_replace('{email}', $user_info['email'], $tmp);
 					$tmp = str_replace('{time}', \Date::time_ago($item['created_at']), $tmp);
+					$tmp = str_replace('{icon}', self::gravatar($user_info['email'], array('class' => 'img-rounded'), array('size' => 48)), $tmp);
 					$tmp = str_replace('{child}', $tree2html($item['children']), $tmp);
 					$html .= $tmp;
 				}
@@ -280,7 +295,18 @@ EOD;
 				$model = new Model_Commentbox();
 				$model->from_array($form->validation()->validated());
 				$model->comment_key = $comment_key;
-				$model->user_id = -1;
+
+				if (\Auth::check())
+				{
+					$model->name = '';
+					$model->email = '';
+					$model->user_id = (int)\Auth::get('id');
+				}
+				else
+				{
+					$model->user_id = -1;
+				}
+
 				$model->child($root)->save();
 
 				\DB::commit_transaction();
@@ -302,6 +328,49 @@ EOD;
 	public function error()
 	{
 		return $this->fieldset()->validation()->error();
+	}
+
+	// GravatarのイメージURLを取得
+	protected static function gravatar($email, Array $attr = array(), Array $options = array())
+	{
+		// http://ja.gravatar.com/site/implement/hash/
+		$hash = md5(strtolower(trim($email)));
+
+		$type = \Arr::get($options, 'type', '');
+		$type = $type ? '.' . $type : $type;
+		\Arr::delete($options, 'type');
+
+		if (\Arr::get($options, 'size'))
+		{
+			$attr['width']  = \Arr::get($options, 'size');
+			$attr['height'] = \Arr::get($options, 'size');
+		}
+
+		$query= http_build_query($options);
+		$query= $query ? '?' . $query : $query;
+		$url  = strtolower(\Input::protocol()) . '://www.gravatar.com/avatar/' . $hash . $type . $query;
+		return \Html::img($url, $attr);
+	}
+
+	protected static function get_user_info($user_id, $default)
+	{
+		$result = $default;
+		$user = -1 == $user_id
+				? null
+				: \Auth\Model\Auth_User::query()
+					->related('metadata')
+					->where('id', $user_id)
+					->where('metadata.key', 'fullname')
+					->get_one();
+		if ($user)
+		{
+			$result['name']
+				= empty(current($user->metadata)->value)
+					? $user->username
+					: current($user->metadata)->value;
+			$result['email'] = $user->email;
+		}
+		return $result;
 	}
 
 }
