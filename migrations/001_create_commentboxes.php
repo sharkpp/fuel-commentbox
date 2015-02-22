@@ -6,7 +6,11 @@ class Create_commentboxes
 {
 	public function up()
 	{
-		\DBUtil::create_table('commentboxes', array(
+		\Config::load('commentbox', true);
+
+		$table = \Config::get('commentbox.table_name', 'commentboxes');
+
+		\DBUtil::create_table($table, array(
 			'id' => array('constraint' => 11, 'type' => 'int', 'auto_increment' => true, 'unsigned' => true),
 			'left_id' => array('constraint' => 11, 'type' => 'int', 'unsigned' => true),
 			'right_id' => array('constraint' => 11, 'type' => 'int', 'unsigned' => true),
@@ -27,6 +31,10 @@ class Create_commentboxes
 
 	public function down()
 	{
-		\DBUtil::drop_table('commentboxes');
+		\Config::load('commentbox', true);
+
+		$table = \Config::get('commentbox.table_name', 'commentboxes');
+
+		\DBUtil::drop_table($table);
 	}
 }

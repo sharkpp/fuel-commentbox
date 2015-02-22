@@ -1,6 +1,7 @@
 <?php
 
 return array(
+	'table_name' => 'commentboxes',
 	'template' => array(
 		'form' => <<<EOD
 {open}
