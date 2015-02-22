@@ -20,7 +20,6 @@ return array(
 		//   gravatar : http://gravatar.com/
 		//   robohash : http://robohash.org/
 		//   adorable : http://avatars.adorable.io/
-		//            : blank image
 		'service' => 'gravatar',
 
 		// gravatar options

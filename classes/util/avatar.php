@@ -146,6 +146,8 @@ class Avatar
 
 	public function get_html($username, $email, Array $attr = array())
 	{
+		$size = $this->get_config('size', 48);
+
 		switch ($this->get_config('service'))
 		{
 
@@ -156,7 +158,7 @@ class Avatar
 			return $this->gravatar(
 						$email, $attr,
 						self::array_filter_null(\Arr::merge(
-							array( 'size' => $this->get_config('size', 48) ),
+							array( 'size' => $size ),
 							$this->get_config('gravatar', array()))
 						));
 
@@ -164,7 +166,7 @@ class Avatar
 			return $this->robohash(
 						$email, $attr,
 						self::array_filter_null(\Arr::merge(
-							array( 'size' => $this->get_config('size', 48) ),
+							array( 'size' => $size ),
 							$this->get_config('robohash', array()))
 						));
 
@@ -172,7 +174,7 @@ class Avatar
 			return $this->adorable(
 						$email, $attr,
 						self::array_filter_null(\Arr::merge(
-							array( 'size' => $this->get_config('size', 48) ),
+							array( 'size' => $size ),
 							$this->get_config('adorable', array()))
 						));
 
@@ -181,8 +183,8 @@ class Avatar
 		return html_tag('span',
 		                \Arr::merge($attr,
 		                            array('style' =>
-		                                     'width: 64px; ' .
-		                                     'height: 64px; ' .
+		                                     'width: ' . $size . 'px; ' .
+		                                     'height: ' . $size . 'px; ' .
 		                                     'background-color: #eee; ' .
 		                                     'display: block;')),
 		                            '');
