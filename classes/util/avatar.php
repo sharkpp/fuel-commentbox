@@ -127,10 +127,30 @@ class Avatar
 		return \Html::img($url, $attr);
 	}
 
+	// get html tag with Adorable Avatars
+	protected function adorable($email, Array $attr = array(), Array $options = array())
+	{
+		$hash = md5(strtolower(trim($email)));
+
+		$size = \Arr::get($options, 'size');
+		if ($size)
+		{
+			$attr['width']  = (int)$size;
+			$attr['height'] = (int)$size;
+		}
+		\Arr::delete($options, 'size');
+
+		$url  = strtolower(\Input::protocol()) . '://api.adorable.io/avatars/' . $size . '/' . $hash;
+		return \Html::img($url, $attr);
+	}
+
 	public function get_html($username, $email, Array $attr = array())
 	{
 		switch ($this->get_config('service'))
 		{
+
+		case 'none';
+			return '';
 
 		case 'gravatar':
 			return $this->gravatar(
@@ -148,11 +168,23 @@ class Avatar
 							$this->get_config('robohash', array()))
 						));
 
+		case 'adorable':
+			return $this->adorable(
+						$email, $attr,
+						self::array_filter_null(\Arr::merge(
+							array( 'size' => $this->get_config('size', 48) ),
+							$this->get_config('adorable', array()))
+						));
+
 		}
 
 		return html_tag('span',
 		                \Arr::merge($attr,
-		                            array('style' => 'width: 64px; height: 64px; background-color: #eee"')),
+		                            array('style' =>
+		                                     'width: 64px; ' .
+		                                     'height: 64px; ' .
+		                                     'background-color: #eee; ' .
+		                                     'display: block;')),
 		                            '');
 	}
 

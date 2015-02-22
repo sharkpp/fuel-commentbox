@@ -9,11 +9,17 @@ return array(
 	'avatar' => array(
 
 		// avatar icon size
+		//   gravatar:  1 - 2048
+		//   robohash:  1 -  400
+		//   adorable: 40 -  285
 		'size' => 48,
 
 		// avatar service
+		//   none     : Do not show an avatar icon
+		//   blank    : blank box
 		//   gravatar : http://gravatar.com/
 		//   robohash : http://robohash.org/
+		//   adorable : http://avatars.adorable.io/
 		//            : blank image
 		'service' => 'gravatar',
 
