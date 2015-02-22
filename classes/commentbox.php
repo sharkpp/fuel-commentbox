@@ -103,6 +103,13 @@ class Commentbox
 		return new Commentbox();
 	}
 
+	protected function get_template($name)
+	{
+		$active_template = \Config::get('commentbox.active', 'default');
+
+		return \Config::get('commentbox.'.$active_template.'.'.$name, '');
+	}
+
 	protected function fieldset()
 	{
 		if ( ! $this->fieldset)
@@ -143,7 +150,7 @@ class Commentbox
 	{
 		$form = $this->fieldset();
 
-		$html = \Config::get('commentbox.template.form');
+		$html = $this->get_template('form');
 
 		foreach ($form->field() as $field)
 		{
@@ -200,7 +207,7 @@ class Commentbox
 		$root = Model_Commentbox::get_parent($this->comment_key);
 		$tree = $root ? $root->dump_tree() : array();
 
-		$template = \Config::get('commentbox.template.comments');
+		$template = $this->get_template('comments');
 
 		$tree2html = function($tree) use ($template, &$tree2html) {
 				$html = '';

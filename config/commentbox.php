@@ -1,8 +1,15 @@
 <?php
 
 return array(
+
+	// table name
 	'table_name' => 'commentboxes',
-	'template' => array(
+
+	// the active pagination template
+	'active' => 'default',
+
+	// default commentbox template
+	'default' => array(
 		'form' => <<<EOD
 {open}
 <div class="form-group">{body_field}</div>
