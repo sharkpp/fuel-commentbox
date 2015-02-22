@@ -143,29 +143,7 @@ class Commentbox
 	{
 		$form = $this->fieldset();
 
-		$template = <<<EOD
-{open}
-<div class="form-group">
-	{body_field}
-</div>
-<div class="form-inline">
-<div class="form-group">
-	{name_field}
-</div>
-<div class="form-group">
-	{email_field}
-</div>
-<div class="form-group">
-	{website_field}
-</div>
-<div class="form-group">
-	{submit}
-</div>
-</div>
-{close}
-EOD;
-
-		$html = $template;
+		$html = \Config::get('commentbox.template.form');
 
 		foreach ($form->field() as $field)
 		{
@@ -222,25 +200,7 @@ EOD;
 		$root = Model_Commentbox::get_parent($this->comment_key);
 		$tree = $root ? $root->dump_tree() : array();
 
-		$template = <<<EOD
-<hr>
-<div class="media">
-	<div class="media-left">
-		<span class="media-object">{icon}</span>
-	</div>
-	<div class="media-body">
-		<h4 class="media-heading">{name} ({email}) <small>{time}</small></h4>
-		{body}</br>
-<a href="#" onclick="$(this).next().toggleClass('hidden');return false;">Reply</a>
-<div class="panel panel-default hidden">
-	<div class="panel-body">
-		{reply}
-	</div>
-</div>
-{child}
-	</div>
-</div>
-EOD;
+		$template = \Config::get('commentbox.template.comments');
 
 		$tree2html = function($tree) use ($template, &$tree2html) {
 				$html = '';
@@ -258,7 +218,8 @@ EOD;
 					$tmp = str_replace('{email}', $user_info['email'], $tmp);
 					$tmp = str_replace('{time}', \Date::time_ago($item['created_at']), $tmp);
 					$tmp = str_replace('{icon}', self::gravatar($user_info['email'], array('class' => 'img-rounded'), array('size' => 48)), $tmp);
-					$tmp = str_replace('{reply}', $this->create_form($item['comment_key']), $tmp);
+					$tmp = str_replace('{reply_toggle}', '<a href="#" onclick="$(this).next().toggleClass(\'hidden\');return false;">Reply</a>', $tmp);
+					$tmp = str_replace('{reply_form}', $this->create_form($item['comment_key']), $tmp);
 					$tmp = str_replace('{child}', $tree2html($item['children']), $tmp);
 					$html .= $tmp;
 				}

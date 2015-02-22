@@ -16,7 +16,7 @@
 	* [java - javafx.application.applicationを拡張する必要がありますというエラーがでました - スタック・オーバーフロー](http://ja.stackoverflow.com/questions/6461/javafx-application-application%e3%82%92%e6%8b%a1%e5%bc%b5%e3%81%99%e3%82%8b%e5%bf%85%e8%a6%81%e3%81%8c%e3%81%82%e3%82%8a%e3%81%be%e3%81%99%e3%81%a8%e3%81%84%e3%81%86%e3%82%a8%e3%83%a9%e3%83%bc%e3%81%8c%e3%81%a7%e3%81%be%e3%81%97%e3%81%9f)
 	* などを参考
 * コメントのモデレート(+/-)
-* テンプレート機能
+* <del>テンプレート機能</del>
 * マイグレーション処理
 	* 設定でテーブル名を変更できるように
 * <del>テスト用のページを追加</del>
