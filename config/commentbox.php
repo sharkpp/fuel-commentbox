@@ -10,6 +10,11 @@ return array(
 
 	// default commentbox template
 	'default' => array(
+
+		// face icon size
+		'icon_size' => 48,
+
+		// comment form template
 		'form' => <<<EOD
 {open}
 <div class="form-group">{body_field}</div>
@@ -22,6 +27,8 @@ return array(
 {close}
 EOD
 , // Limitation of heredoc
+
+		// comment tree template
 		'comments' =>  <<<EOD
 <hr>
 <div class="media">

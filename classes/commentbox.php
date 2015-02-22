@@ -95,19 +95,26 @@ class Commentbox
 	/**
 	 * Commentbox driver forge.
 	 *
-	 * @param	array			$config		Config array
-	 * @return  Commentbox
+	 * @param  array      $config Config array
+	 * @return Commentbox
 	 */
 	public static function find($comment_key)
 	{
 		return new Commentbox();
 	}
 
-	protected function get_template($name)
+	/**
+	 * テンプレートの設定値を取得
+	 *
+	 * @param  string $key     設定値名
+	 * @param  mixed  $default 初期値
+	 * @return 設定値
+	 */
+	protected function get_template($key, $default = null)
 	{
 		$active_template = \Config::get('commentbox.active', 'default');
 
-		return \Config::get('commentbox.'.$active_template.'.'.$name, '');
+		return \Config::get('commentbox.'.$active_template.'.'.$key, $default);
 	}
 
 	protected function fieldset()
@@ -208,8 +215,10 @@ class Commentbox
 		$tree = $root ? $root->dump_tree() : array();
 
 		$template = $this->get_template('comments');
+		
+		$icons_size = $this->get_template('icon_size', 48);
 
-		$tree2html = function($tree) use ($template, &$tree2html) {
+		$tree2html = function($tree) use ($template, $icons_size, &$tree2html) {
 				$html = '';
 				foreach ($tree as $item)
 				{
@@ -224,7 +233,7 @@ class Commentbox
 					$tmp = str_replace('{name}', empty($user_info['name']) ? '匿名' : $user_info['name'], $tmp);
 					$tmp = str_replace('{email}', $user_info['email'], $tmp);
 					$tmp = str_replace('{time}', \Date::time_ago($item['created_at']), $tmp);
-					$tmp = str_replace('{icon}', self::gravatar($user_info['email'], array('class' => 'img-rounded'), array('size' => 48)), $tmp);
+					$tmp = str_replace('{icon}', self::gravatar($user_info['email'], array('class' => 'img-rounded'), array('size' => $icons_size)), $tmp);
 					$tmp = str_replace('{reply_toggle}', '<a href="#" onclick="$(this).next().toggleClass(\'hidden\');return false;">Reply</a>', $tmp);
 					$tmp = str_replace('{reply_form}', $this->create_form($item['comment_key']), $tmp);
 					$tmp = str_replace('{child}', $tree2html($item['children']), $tmp);
