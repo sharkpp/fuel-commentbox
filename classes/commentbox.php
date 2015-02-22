@@ -55,6 +55,17 @@ class Commentbox
 	}
 
 	/**
+	 * Commentbox driver forge.
+	 *
+	 * @param  array      $config Config array
+	 * @return Commentbox
+	 */
+	public static function find($comment_key)
+	{
+		return new Commentbox();
+	}
+
+	/**
 	 * Driver constructor
 	 *
 	 * @param string $comment_key comment key
@@ -93,17 +104,6 @@ class Commentbox
 	}
 
 	/**
-	 * Commentbox driver forge.
-	 *
-	 * @param  array      $config Config array
-	 * @return Commentbox
-	 */
-	public static function find($comment_key)
-	{
-		return new Commentbox();
-	}
-
-	/**
 	 * テンプレートの設定値を取得
 	 *
 	 * @param  string $key     設定値名
@@ -112,9 +112,9 @@ class Commentbox
 	 */
 	protected function get_template($key, $default = null)
 	{
-		$active_template = \Config::get('commentbox.active', 'default');
+		$active_template = $this->get_config('active', 'default');
 
-		return \Config::get('commentbox.'.$active_template.'.'.$key, $default);
+		return $this->get_config($active_template.'.'.$key, $default);
 	}
 
 	protected function fieldset()
