@@ -7,7 +7,7 @@ class CommentboxException extends \FuelException {}
 class Commentbox
 {
 	/**
-	 * Default config
+	 * Commentbox class default config
 	 * @var array
 	 */
 	protected static $_defaults = array();
@@ -19,13 +19,13 @@ class Commentbox
 	protected $config = array();
 
 	/**
-	 * Driver config
+	 * Commentbox class config
 	 * @var array
 	 */
 	protected $comment_key = '';
 
 	/**
-	 * Driver config
+	 * Commentbox class config
 	 * @var array
 	 */
 	protected $fieldset = null;
@@ -215,10 +215,10 @@ class Commentbox
 		$tree = $root ? $root->dump_tree() : array();
 
 		$template = $this->get_template('comments');
-		
-		$icons_size = $this->get_template('icon_size', 48);
 
-		$tree2html = function($tree) use ($template, $icons_size, &$tree2html) {
+		$avatar = Avatar::forge();
+
+		$tree2html = function($tree) use ($template, &$avatar, &$tree2html) {
 				$html = '';
 				foreach ($tree as $item)
 				{
@@ -233,7 +233,7 @@ class Commentbox
 					$tmp = str_replace('{name}', empty($user_info['name']) ? '匿名' : $user_info['name'], $tmp);
 					$tmp = str_replace('{email}', $user_info['email'], $tmp);
 					$tmp = str_replace('{time}', \Date::time_ago($item['created_at']), $tmp);
-					$tmp = str_replace('{icon}', self::gravatar($user_info['email'], array('class' => 'img-rounded'), array('size' => $icons_size)), $tmp);
+					$tmp = str_replace('{icon}', $avatar->get_html($user_info['name'], $user_info['email'], array('class' => 'img-rounded')), $tmp);
 					$tmp = str_replace('{reply_toggle}', '<a href="#" onclick="$(this).next().toggleClass(\'hidden\');return false;">Reply</a>', $tmp);
 					$tmp = str_replace('{reply_form}', $this->create_form($item['comment_key']), $tmp);
 					$tmp = str_replace('{child}', $tree2html($item['children']), $tmp);
@@ -319,28 +319,6 @@ class Commentbox
 	public function error()
 	{
 		return $this->fieldset()->validation()->error();
-	}
-
-	// GravatarのイメージURLを取得
-	protected static function gravatar($email, Array $attr = array(), Array $options = array())
-	{
-		// http://ja.gravatar.com/site/implement/hash/
-		$hash = md5(strtolower(trim($email)));
-
-		$type = \Arr::get($options, 'type', '');
-		$type = $type ? '.' . $type : $type;
-		\Arr::delete($options, 'type');
-
-		if (\Arr::get($options, 'size'))
-		{
-			$attr['width']  = \Arr::get($options, 'size');
-			$attr['height'] = \Arr::get($options, 'size');
-		}
-
-		$query= http_build_query($options);
-		$query= $query ? '?' . $query : $query;
-		$url  = strtolower(\Input::protocol()) . '://www.gravatar.com/avatar/' . $hash . $type . $query;
-		return \Html::img($url, $attr);
 	}
 
 	protected static function get_user_info($user_id, $default)

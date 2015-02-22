@@ -5,14 +5,40 @@ return array(
 	// table name
 	'table_name' => 'commentboxes',
 
+	// avatar config
+	'avatar' => array(
+
+		// avatar icon size
+		'size' => 48,
+
+		// avatar service
+		//   gravatar : http://gravatar.com/
+		//   robohash : http://robohash.org/
+		//            : blank image
+		'service' => 'gravatar',
+
+		// gravatar options
+		//   see: http://en.gravatar.com/site/implement/images/
+		'gravatar' => array(
+			'd' => 'identicon', // defaults: 404, mm, identicon, monsterid, wavatar, retro, blank
+		//	'f' => 'y', // forcedefault
+		//	'r' => 'g', // Rating: g, pg, r, x
+		),
+
+		// robohash options
+		//   see: http://robohash.org/
+		'robohash' => array(
+		//	'bgset' => 'bg1', // Robots at your Location: bg1, bg2
+		//	'ext' => 'png', // image extension: png, jpg
+		//	'gravatar' => 'hashed', // use gravatar: yes, hashed
+		),
+	),
+
 	// the active pagination template
 	'active' => 'default',
 
 	// default commentbox template
 	'default' => array(
-
-		// face icon size
-		'icon_size' => 48,
 
 		// comment form template
 		'form' => <<<EOD

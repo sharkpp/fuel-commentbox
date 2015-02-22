@@ -30,7 +30,7 @@
 		* <del>ログイン時は Auth パッケージから引っ張ってくる</del>
 	* アイコン表示
 		* <del>[Gravatar - Globally Recognized Avatars](https://en.gravatar.com/) でアイコン表示</del>
-		* [RoboHash](http://robohash.org/)
+		* <del>[RoboHash](http://robohash.org/) でアイコン表示</del>
 		* [Identicon](http://www.radiumsoftware.com/0702.html)
 	* いつ投稿したか
 		* <del>`an hour ago` 的な表示</del>
