@@ -110,7 +110,7 @@ class Commentbox
 			$this->fieldset = \Fieldset::forge('commentbox');
 			$this->fieldset
 				->add('comment_key', '')
-				->add_rule('match_value', $this->comment_key, true);
+				->add_rule('required');
 			if ( ! \Auth::check())
 			{
 				$this->fieldset
@@ -130,6 +130,7 @@ class Commentbox
 			$this->fieldset
 				->add('body', '本文', array('type' => 'textarea', 'class' => 'form-control'))
 				->add_rule('trim')
+				->add_rule('required')
 				->add_rule('required');
 			$this->fieldset
 				->add('submit', '', array('type'=>'submit', 'value' => '送信', 'class' => 'form-control'));
@@ -138,14 +139,7 @@ class Commentbox
 		return $this->fieldset;
 	}
 
-	/**
-	* Get a config setting.
-	*
-	* @param string $key the config key
-	* @param mixed  $default the default value
-	* @return mixed the config setting value
-	*/
-	public function form()
+	protected function create_form($comment_key)
 	{
 		$form = $this->fieldset();
 
@@ -201,7 +195,7 @@ EOD;
 		$html = str_replace('{open}',
 		                    \Form::open(array('method' => 'post'))
 		                    . \Form::csrf()
-		                    . \Form::hidden('comment_key', $this->comment_key),
+		                    . \Form::hidden('comment_key', $comment_key),
 		                    $html);
 		$html = str_replace('{close}',
 		                    \Form::close(), $html);
@@ -209,11 +203,23 @@ EOD;
 		return $html;
 	}
 
+	/**
+	* Get a config setting.
+	*
+	* @param string $key the config key
+	* @param mixed  $default the default value
+	* @return mixed the config setting value
+	*/
+	public function form()
+	{
+		return $this->create_form($this->comment_key);
+	}
+
 	public function comments()
 	{
 		$form = $this->fieldset();
 
-		$root = Model_Commentbox::get_root($this->comment_key);
+		$root = Model_Commentbox::get_parent($this->comment_key);
 		$tree = $root ? $root->dump_tree() : array();
 
 		$template = <<<EOD
@@ -224,7 +230,13 @@ EOD;
 	</div>
 	<div class="media-body">
 		<h4 class="media-heading">{name} ({email}) <small>{time}</small></h4>
-		{body}
+		{body}</br>
+<a href="#" onclick="$(this).next().toggleClass('hidden');return false;">Reply</a>
+<div class="panel panel-default hidden">
+	<div class="panel-body">
+		{reply}
+	</div>
+</div>
 {child}
 	</div>
 </div>
@@ -246,6 +258,7 @@ EOD;
 					$tmp = str_replace('{email}', $user_info['email'], $tmp);
 					$tmp = str_replace('{time}', \Date::time_ago($item['created_at']), $tmp);
 					$tmp = str_replace('{icon}', self::gravatar($user_info['email'], array('class' => 'img-rounded'), array('size' => 48)), $tmp);
+					$tmp = str_replace('{reply}', $this->create_form($item['comment_key']), $tmp);
 					$tmp = str_replace('{child}', $tree2html($item['children']), $tmp);
 					$html .= $tmp;
 				}
@@ -275,7 +288,7 @@ EOD;
 		$form = $this->fieldset();
 
 		$form->validation()->run($input);
-
+\Log::error(print_r($input,true));
 		if ( ! $form->validation()->error())
 		{
 			try
@@ -290,8 +303,8 @@ EOD;
 				     $comment_key = \Str::random('alnum', 32))
 					continue;
 
-				$root = Model_Commentbox::get_root($this->comment_key, true);
-
+				$parent = Model_Commentbox::get_parent($form->validation()->validated('comment_key', $this->comment_key), true);
+\Log::error(print_r($parent,true));
 				$model = new Model_Commentbox();
 				$model->from_array($form->validation()->validated());
 				$model->comment_key = $comment_key;
@@ -306,8 +319,8 @@ EOD;
 				{
 					$model->user_id = -1;
 				}
-
-				$model->child($root)->save();
+\Log::error(print_r($model,true));
+				$model->child($parent)->save();
 
 				\DB::commit_transaction();
 			}
@@ -320,6 +333,7 @@ EOD;
 		}
 		else
 		{
+			return false;
 		}
 
 		return true;

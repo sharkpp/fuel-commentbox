@@ -39,5 +39,5 @@
 		* MarkDownでかけるように？
 			* HTMLタグをエスケープしないと、、、
 		* wysiwyg
-* リプライ機能
+* <del>リプライ機能</del>
 * [recaptcha](http://www.google.com/recaptcha/intro/index.html) で CAPTCHA 表示

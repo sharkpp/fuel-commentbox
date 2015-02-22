@@ -39,7 +39,7 @@ class Model_Commentbox extends \Orm\Model_Nestedset
 
 	protected static $_table_name = 'commentboxes';
 
-	public static function get_root($comment_key, $create = false)
+	public static function get_parent($comment_key, $create = false)
 	{
 		$root = Model_Commentbox::query()
 					->where('comment_key', $comment_key)
