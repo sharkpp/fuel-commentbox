@@ -1,4 +1,14 @@
 <?php
+/**
+ * Part of the fuel-commentbox package.
+ *
+ * @package    fuel-commentbox
+ * @version    1.0
+ * @author     sharkpp
+ * @license    MIT License
+ * @copyright  2015 sharkpp
+ * @link       https://github.com/sharkpp/fuel-commentbox
+ */
 
 return array(
 
