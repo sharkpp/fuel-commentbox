@@ -6,7 +6,7 @@
 
 ## ToDo
 
-* README書く
+* <del>README書く</del>
 * <del>ライセンスファイル追加</del>
 * <del>ライセンスコメントをソースに追加</del>
 
