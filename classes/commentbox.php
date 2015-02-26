@@ -226,7 +226,7 @@ class Commentbox
 
 		$template = $this->get_template('comments');
 
-		$avatar = Avatar::forge();
+		$avatar = Avatar::forge($this->get_config('avatar', array()));
 
 		$tree2html = function($tree) use ($template, &$avatar, &$tree2html) {
 				$html = '';
