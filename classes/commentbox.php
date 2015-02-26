@@ -275,7 +275,7 @@ class Commentbox
 		$form = $this->fieldset();
 
 		$form->validation()->run($input);
-\Log::error(print_r($input,true));
+
 		if ( ! $form->validation()->error())
 		{
 			try
@@ -291,7 +291,7 @@ class Commentbox
 					continue;
 
 				$parent = Model_Commentbox::get_parent($form->validation()->validated('comment_key', $this->comment_key), true);
-\Log::error(print_r($parent,true));
+
 				$model = new Model_Commentbox();
 				$model->from_array($form->validation()->validated());
 				$model->comment_key = $comment_key;
@@ -306,7 +306,7 @@ class Commentbox
 				{
 					$model->user_id = -1;
 				}
-\Log::error(print_r($model,true));
+
 				$model->child($parent)->save();
 
 				\DB::commit_transaction();
