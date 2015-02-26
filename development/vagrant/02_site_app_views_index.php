@@ -1,17 +1,111 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
-    <meta name="author" content="">
-    <title>Starter Template for Bootstrap</title>
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
-  </head>
-  <body>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <title>Starter Template for Bootstrap</title>
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+  <style type="text/css">
+    .nav > li > a {
+      font-size: 1em;
+      line-height: 1em;
+      padding-top: 5px;
+      padding-bottom: 5px;
+      border-left: 2px solid #ccc;
+    }
+    li > .nav > li > a {
+      font-size: 0.9em;
+      line-height: 0.9em;
+      border-left: none;
+    }
+    .glyphicon-space {
+      color: transparent;
+    }
+  </style>
+</head>
+<body>
 
-    <div class="container">
+  <div class="container">
+
+    <div class="page-header">
+      <h1>fuel-commentbox test page</h1>
+    </div>
+      
+<div class="row">
+
+<div class="col-md-3 col-md-push-9">
+
+<nav class="hidden-print hidden-xs hidden-sm">
+  <ul class="nav">
+<?php
+function get_url($modify_key, $modify_value)
+{
+	$url = \Uri::string();
+	$get = \Input::get();
+	if ('page' == $modify_key)
+	{
+		$segments = \Uri::segments();
+		$segments[0] = $modify_value;
+		$url = implode('/', $segments);
+	}
+	else
+	{
+		if ($modify_key)
+			$get[$modify_key] = $modify_value;
+	}
+	return \Uri::create($url, array(), $get);
+}
+function is_active($key, $value)
+{
+	$active = false;
+	if ('page' == $key)
+	{
+		$active = $value == \Uri::segment(1, '');
+	}
+	else
+	{
+		$active = $value == \Input::get($key);
+	}
+	return $active ? 'glyphicon glyphicon-ok' : 'glyphicon glyphicon-option-horizontal glyphicon-space';
+}
+?>
+
+  <li class="">
+    <a href="#glyphicons">Pages</a>
+    <ul class="nav">
+      <li><a href="<?php echo get_url('page', ''); ?>"><i class="<?php echo is_active('page', ''); ?>"></i> Main</a></li>
+      <li><a href="<?php echo get_url('page', 'sub1'); ?>"><i class="<?php echo is_active('page', 'sub1'); ?>"></i> Sub 1</a></li>
+      <li><a href="<?php echo get_url('page', 'sub2'); ?>"><i class="<?php echo is_active('page', 'sub2'); ?>"></i> Sub 2</a></li>
+    </ul>
+  </li>
+
+  <li class="">
+    <a href="#" class="disabled">Avatar</a>
+    <ul class="nav">
+      <li><a href="<?php echo get_url('avatar', 'none'); ?>"><i class="<?php echo is_active('avatar', 'none'); ?>"></i> none</a></li>
+      <li><a href="<?php echo get_url('avatar', 'blank'); ?>"><i class="<?php echo is_active('avatar', 'blank'); ?>"></i> blank</a></li>
+      <li><a href="<?php echo get_url('avatar', 'gravatar'); ?>"><i class="<?php echo is_active('avatar', 'gravatar'); ?>"></i> gravatar</a></li>
+      <li><a href="<?php echo get_url('avatar', 'robohash'); ?>"><i class="<?php echo is_active('avatar', 'robohash'); ?>"></i> robohash</a></li>
+      <li><a href="<?php echo get_url('avatar', 'adorable'); ?>"><i class="<?php echo is_active('avatar', 'adorable'); ?>"></i> adorable</a></li>
+    </ul>
+  </li>
+
+  <li class="">
+    <a href="#" class="disabled">Guest</a>
+    <ul class="nav">
+      <li><a href="<?php echo get_url('guest', 'enable'); ?>"><i class="<?php echo is_active('guest', 'enable'); ?>"></i> enable</a></li>
+      <li><a href="<?php echo get_url('guest', 'disable'); ?>"><i class="<?php echo is_active('guest', 'disable'); ?>"></i> disable</a></li>
+    </ul>
+  </li>
+
+</ul>
+          </nav>
+
+</div><!-- /col-md-3 col-md-push-9 -->
+<div class="col-md-9 col-md-pull-3">
 
 <?php $error = \Session::get_flash('error');
       if ($error): ?>
@@ -55,8 +149,13 @@
   </div>
 </div>
 
+</div><!-- /col-md-9 col-md-pull-3 -->
+
+</div><!-- /row -->
+
     </div><!-- /.container -->
 
   <script src="//code.jquery.com/jquery-1.11.2.min.js"></script>
+  <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
   </body>
 </html>
