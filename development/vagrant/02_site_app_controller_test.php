@@ -11,7 +11,7 @@ class Controller_Test extends Controller
 			!\Security::check_token())
 		{
 			\Session::set_flash('error', 'session expired!');
-			return Response::redirect(Uri::current());
+			\Response::redirect(\Uri::create(\Uri::string(), array(), \Input::get()));
 		}
 	}
 
@@ -55,12 +55,16 @@ class Controller_Test extends Controller
 		}
 
 		\Config::load('commentbox', true);
-
+\Log::error(print_r(\Input::post(), true));\Log::error(print_r(\Input::get(), true));
+\Log::error(print_r($_POST, true));\Log::error(print_r($_GET, true));
 		$config = array(
 				'guest' => 'disable' != \Input::get('guest', \Config::get('commentbox.guest') ? 'enable' : 'disable'),
+				'recaptcha' => array(
+					'enable' => 'disable' != \Input::get('recaptcha', \Config::get('commentbox.recaptcha.enable') ? 'enable' : 'disable'),
+				),
 				'avatar' => array(
 					'service' => \Input::get('avatar', \Config::get('commentbox.avatar.service')),
-				)
+				),
 			);
 		$key = sprintf($page.'.'.$id);
 		$commentbox = Commentbox::forge($key, $config);
@@ -92,8 +96,6 @@ class Controller_Test extends Controller
 			{
 			}
 		}
-
-//		$commentbox_form = $comment->;
 
 		return
 			\Response::forge(

@@ -101,6 +101,14 @@ function is_active($key, $value, $default = '')
     </ul>
   </li>
 
+  <li class="">
+    <a href="#" class="disabled">reCAPTCHA</a>
+    <ul class="nav">
+      <li><a href="<?php echo get_url('recaptcha', 'enable'); ?>"><i class="<?php echo is_active('recaptcha', 'enable', 'enable'); ?>"></i> enable</a></li>
+      <li><a href="<?php echo get_url('recaptcha', 'disable'); ?>"><i class="<?php echo is_active('recaptcha', 'disable', 'enable'); ?>"></i> disable</a></li>
+    </ul>
+  </li>
+
 </ul>
           </nav>
 
