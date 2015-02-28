@@ -6,9 +6,8 @@
 
 ## ToDo
 
-* <del>README書く</del>
-* <del>ライセンスファイル追加</del>
-* <del>ライセンスコメントをソースに追加</del>
+* <del>ゲスト書き込みの有効/無効</del>
+* recaptcha 対応
 
 ## 機能
 
@@ -30,7 +29,7 @@
 * コメントフォーム
 	* <del>名前表示</del>
 		* <del>ログイン時は Auth パッケージから引っ張ってくる</del>
-	* アイコン表示
+	* <del>アイコン表示</del>
 		* <del>[Gravatar - Globally Recognized Avatars](https://en.gravatar.com/) でアイコン表示</del>
 		* <del>[RoboHash](http://robohash.org/) でアイコン表示</del>
 		* [Identicon](http://www.radiumsoftware.com/0702.html)

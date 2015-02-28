@@ -165,6 +165,15 @@ class Commentbox
 
 	protected function create_form($comment_key)
 	{
+		$authorized = \Auth::check();
+
+		// ゲストの書き込み許可
+		if (! $authorized &&
+			! $this->get_config('guest', false))
+		{
+			return '';
+		}
+
 		$form = $this->fieldset();
 
 		$html = $this->get_template('form');
@@ -184,7 +193,7 @@ class Commentbox
 			
 		}
 
-		if (\Auth::check())
+		if ($authorized)
 		{
 			$html = str_replace('{name_field}',  '', $html);
 			$html = str_replace('{email_field}', '', $html);
@@ -219,6 +228,10 @@ class Commentbox
 
 	public function comments()
 	{
+		// ゲストの書き込み許可
+		$guest_comment = \Auth::check() ||
+		                 $this->get_config('guest', false);
+
 		$form = $this->fieldset();
 
 		$root = Model_Commentbox::get_parent($this->comment_key);
@@ -228,7 +241,7 @@ class Commentbox
 
 		$avatar = Avatar::forge($this->get_config('avatar', array()));
 
-		$tree2html = function($tree) use ($template, &$avatar, &$tree2html) {
+		$tree2html = function($tree) use ($template, &$avatar, &$tree2html, $guest_comment) {
 				$html = '';
 				foreach ($tree as $item)
 				{
@@ -244,8 +257,8 @@ class Commentbox
 					$tmp = str_replace('{email}', $user_info['email'], $tmp);
 					$tmp = str_replace('{time}', \Date::time_ago($item['created_at']), $tmp);
 					$tmp = str_replace('{icon}', $avatar->get_html($user_info['name'], $user_info['email'], array('class' => 'img-rounded')), $tmp);
-					$tmp = str_replace('{reply_toggle}', '<a href="#" onclick="$(this).next().toggleClass(\'hidden\');return false;">Reply</a>', $tmp);
-					$tmp = str_replace('{reply_form}', $this->create_form($item['comment_key']), $tmp);
+					$tmp = str_replace('{reply_toggle}', ! $guest_comment ? '' : '<a href="#" onclick="$(this).next().toggleClass(\'hidden\');return false;">Reply</a>', $tmp);
+					$tmp = str_replace('{reply_form}', ! $guest_comment ? '' : $this->create_form($item['comment_key']), $tmp);
 					$tmp = str_replace('{child}', $tree2html($item['children']), $tmp);
 					$html .= $tmp;
 				}
@@ -272,6 +285,15 @@ class Commentbox
 	*/
 	public function run($input = null)
 	{
+		$authorized = \Auth::check();
+
+		// ゲストの書き込み許可
+		if (! $authorized &&
+			! $this->get_config('guest', false))
+		{
+			return '';
+		}
+
 		$form = $this->fieldset();
 
 		$form->validation()->run($input);
@@ -296,7 +318,7 @@ class Commentbox
 				$model->from_array($form->validation()->validated());
 				$model->comment_key = $comment_key;
 
-				if (\Auth::check())
+				if ($authorized)
 				{
 					$model->name = '';
 					$model->email = '';

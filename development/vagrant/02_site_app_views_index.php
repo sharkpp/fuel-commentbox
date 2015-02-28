@@ -58,7 +58,7 @@ function get_url($modify_key, $modify_value)
 	}
 	return \Uri::create($url, array(), $get);
 }
-function is_active($key, $value)
+function is_active($key, $value, $default = '')
 {
 	$active = false;
 	if ('page' == $key)
@@ -67,14 +67,14 @@ function is_active($key, $value)
 	}
 	else
 	{
-		$active = $value == \Input::get($key);
+		$active = $value == \Input::get($key, $default);
 	}
 	return $active ? 'glyphicon glyphicon-ok' : 'glyphicon glyphicon-option-horizontal glyphicon-space';
 }
 ?>
 
   <li class="">
-    <a href="#glyphicons">Pages</a>
+    <a href="#">Pages</a>
     <ul class="nav">
       <li><a href="<?php echo get_url('page', ''); ?>"><i class="<?php echo is_active('page', ''); ?>"></i> Main</a></li>
       <li><a href="<?php echo get_url('page', 'sub1'); ?>"><i class="<?php echo is_active('page', 'sub1'); ?>"></i> Sub 1</a></li>
@@ -85,19 +85,19 @@ function is_active($key, $value)
   <li class="">
     <a href="#" class="disabled">Avatar</a>
     <ul class="nav">
-      <li><a href="<?php echo get_url('avatar', 'none'); ?>"><i class="<?php echo is_active('avatar', 'none'); ?>"></i> none</a></li>
-      <li><a href="<?php echo get_url('avatar', 'blank'); ?>"><i class="<?php echo is_active('avatar', 'blank'); ?>"></i> blank</a></li>
-      <li><a href="<?php echo get_url('avatar', 'gravatar'); ?>"><i class="<?php echo is_active('avatar', 'gravatar'); ?>"></i> gravatar</a></li>
-      <li><a href="<?php echo get_url('avatar', 'robohash'); ?>"><i class="<?php echo is_active('avatar', 'robohash'); ?>"></i> robohash</a></li>
-      <li><a href="<?php echo get_url('avatar', 'adorable'); ?>"><i class="<?php echo is_active('avatar', 'adorable'); ?>"></i> adorable</a></li>
+      <li><a href="<?php echo get_url('avatar', 'none'); ?>"><i class="<?php echo is_active('avatar', 'none', 'gravatar'); ?>"></i> none</a></li>
+      <li><a href="<?php echo get_url('avatar', 'blank'); ?>"><i class="<?php echo is_active('avatar', 'blank', 'gravatar'); ?>"></i> blank</a></li>
+      <li><a href="<?php echo get_url('avatar', 'gravatar'); ?>"><i class="<?php echo is_active('avatar', 'gravatar', 'gravatar'); ?>"></i> gravatar</a></li>
+      <li><a href="<?php echo get_url('avatar', 'robohash'); ?>"><i class="<?php echo is_active('avatar', 'robohash', 'gravatar'); ?>"></i> robohash</a></li>
+      <li><a href="<?php echo get_url('avatar', 'adorable'); ?>"><i class="<?php echo is_active('avatar', 'adorable', 'gravatar'); ?>"></i> adorable</a></li>
     </ul>
   </li>
 
   <li class="">
     <a href="#" class="disabled">Guest</a>
     <ul class="nav">
-      <li><a href="<?php echo get_url('guest', 'enable'); ?>"><i class="<?php echo is_active('guest', 'enable'); ?>"></i> enable</a></li>
-      <li><a href="<?php echo get_url('guest', 'disable'); ?>"><i class="<?php echo is_active('guest', 'disable'); ?>"></i> disable</a></li>
+      <li><a href="<?php echo get_url('guest', 'enable'); ?>"><i class="<?php echo is_active('guest', 'enable', 'enable'); ?>"></i> enable</a></li>
+      <li><a href="<?php echo get_url('guest', 'disable'); ?>"><i class="<?php echo is_active('guest', 'disable', 'enable'); ?>"></i> disable</a></li>
     </ul>
   </li>
 

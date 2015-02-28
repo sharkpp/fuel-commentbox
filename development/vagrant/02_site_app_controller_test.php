@@ -54,6 +54,8 @@ class Controller_Test extends Controller
 				->add_rule('required');
 		}
 
+		\Config::load('commentbox', true);
+
 		$config = array(
 				'guest' => 'disable' != \Input::get('guest', \Config::get('commentbox.guest') ? 'enable' : 'disable'),
 				'avatar' => array(

@@ -15,6 +15,9 @@ return array(
 	// table name
 	'table_name' => 'commentboxes',
 
+	// permission of guest comment
+	'guest' => true,
+
 	// avatar config
 	'avatar' => array(
 
