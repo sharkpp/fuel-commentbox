@@ -9,5 +9,6 @@ Autoloader::add_classes(array(
 
 	// helper class
 	'Commentbox\\Avatar'              => __DIR__ . '/classes/util/avatar.php',
+	'Commentbox\\Recaptcha'           => __DIR__ . '/classes/util/recaptcha.php',
 
 ));

@@ -154,10 +154,21 @@ class Commentbox
 			$this->fieldset
 				->add('body', '本文', array('type' => 'textarea', 'class' => 'form-control'))
 				->add_rule('trim')
-				->add_rule('required')
 				->add_rule('required');
 			$this->fieldset
-				->add('submit', '', array('type'=>'submit', 'value' => '送信', 'class' => 'form-control'));
+				->add('submit', '', array('type'=>'submit', 'value' => '送信', 'class' => 'form-control',
+				                          'disabled' => 'disabled'));
+
+			if ($this->get_config('recaptcha.enable', false))
+			{
+				$this->fieldset
+					->validation()
+						->add_callable(Recaptcha::forge($this->get_config('recaptcha', array())));
+				$this->fieldset
+					->add('g-recaptcha-response', 'reCAPTCHA hash')
+					->add_rule('recaptcha')
+					->add_rule('required');
+			}
 		}
 
 		return $this->fieldset;
@@ -190,9 +201,12 @@ class Commentbox
 			$html = str_replace('{email_field}', '', $html);
 		}
 
+		$html = str_replace('{comment_key}', $comment_key, $html);
 		$html = str_replace('{submit}',
 		                    \Form::submit($form->field('submit')->name,
-		                                  $form->field('submit')->get_attribute('value')),
+		                                  $form->field('submit')->get_attribute('value'),
+		                                  \Arr::merge($form->field('submit')->get_attribute(),
+		                                              array('id' => 'commentbox_submit_' . $comment_key))),
 		                    $html);
 		$html = str_replace('{open}',
 		                    \Form::open(array('method' => 'post'))
@@ -234,7 +248,15 @@ class Commentbox
 			$errors = str_replace('{errors}', '', $errors);
 		}
 
+		$recaptcha_script = '';
+		if ($this->get_config('recaptcha.enable', false))
+		{
+			$recaptcha_script = $this->get_template('recaptcha_script');
+			$recaptcha_script = str_replace('{recaptcha_site_key}', $this->get_config('recaptcha.site_key', ''), $recaptcha_script);
+		}
+
 		$html = $this->get_template('form_wrap');
+		$html = str_replace('{recaptcha_script}', $recaptcha_script, $html);
 		$html = str_replace('{form}', $this->create_form($this->comment_key), $html);
 		$html = str_replace('{errors}', $errors, $html);
 		
@@ -271,9 +293,15 @@ class Commentbox
 					$tmp = str_replace('{name}', empty($user_info['name']) ? '匿名' : $user_info['name'], $tmp);
 					$tmp = str_replace('{email}', $user_info['email'], $tmp);
 					$tmp = str_replace('{time}', \Date::time_ago($item['created_at']), $tmp);
-					$tmp = str_replace('{icon}', $avatar->get_html($user_info['name'], $user_info['email'], array('class' => 'img-rounded')), $tmp);
-					$tmp = str_replace('{reply_toggle}', ! $guest_comment ? '' : '<a href="#" onclick="$(this).next().toggleClass(\'hidden\');return false;">Reply</a>', $tmp);
-					$tmp = str_replace('{reply_form}', ! $guest_comment ? '' : $this->create_form($item['comment_key']), $tmp);
+					$tmp = str_replace('{avatar}', $avatar->get_html($user_info['name'], $user_info['email'],
+					                                                 array('class' => 'img-rounded')), $tmp);
+					$tmp = str_replace('{reply_button}', ! $guest_comment ? ''
+					                                     : str_replace('{comment_key}', $item['comment_key'],
+					                                                   $this->get_template('comment_reply_button')),
+					                                     $tmp);
+					$tmp = str_replace('{reply_form}', ! $guest_comment 
+					                                   ? '' : $this->create_form($item['comment_key']), $tmp);
+					$tmp = str_replace('{comment_key}', $item['comment_key'], $tmp);
 					$tmp = str_replace('{child}', $tree2html($item['children']), $tmp);
 					$html .= $tmp;
 				}

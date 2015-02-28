@@ -52,6 +52,13 @@ return array(
 		),
 	),
 
+	// reCAPTCHA config
+	'recaptcha' => array(
+		'enable' => false,
+		'site_key' => 'fill your site key here',
+		'secret_key' => 'fill your secret key here',
+	),
+
 	// the active pagination template
 	'active' => 'default',
 
@@ -65,6 +72,7 @@ return array(
 {errors}
   </div>
 </div>
+{recaptcha_script}
 EOD
 , // Limitation of heredoc
 
@@ -72,11 +80,12 @@ EOD
 		'form' => <<<EOD
 {open}
 <div class="form-group">{body_field}</div>
+<div id="commentbox_recaptcha_{comment_key}"></div>
 <div class="form-inline">
 	<div class="form-group">{name_field}</div>
 	<div class="form-group">{email_field}</div>
 	<div class="form-group">{website_field}</div>
-	<div class="form-group">{submit}</div>
+	<div class="form-group pull-right">{submit}</div>
 </div>
 {close}
 EOD
@@ -110,12 +119,12 @@ EOD
 <hr>
 <div class="media">
 	<div class="media-left">
-		<span class="media-object">{icon}</span>
+		<span class="media-object">{avatar}</span>
 	</div>
 	<div class="media-body">
 		<h4 class="media-heading">{name} ({email}) <small>{time}</small></h4>
 		{body}</br>
-		{reply_toggle}
+		{reply_button}
 <div class="panel panel-default hidden">
 	<div class="panel-body">
 		{reply_form}
@@ -124,6 +133,42 @@ EOD
 {child}
 	</div>
 </div>
+EOD
+, // Limitation of heredoc
+
+		'comment_reply_button' => <<<EOD
+<a href="#" id="commentbox_reply_button_{comment_key}" onclick="$(this).next().toggleClass('hidden');return false;">Reply</a>
+EOD
+, // Limitation of heredoc
+
+		// reCAPTCHA onload event script
+		'recaptcha_script' => <<<EOD
+<script type="text/javascript">
+	var cbRecaptchaRender = function(id) {
+		grecaptcha.render(id, {
+			'sitekey': '{recaptcha_site_key}',
+			'callback': function(){
+				$('[id="'+id.replace('commentbox_recaptcha_', 'commentbox_submit_')+'"]')
+					.removeAttr('disabled');
+			}
+		});
+	};
+	var cbRecaptchaOnload = function() {
+		$('[id^="commentbox_recaptcha_"]:first')
+			.each(function(){
+				cbRecaptchaRender($(this).attr('id'));
+			});
+		$('[id^="commentbox_reply_button_"]')
+			.on('click', function(){
+				var id = $(this).attr('id').replace('commentbox_reply_button_', 'commentbox_recaptcha_');
+				$('[id="'+id+'"]:empty')
+					.each(function(){
+						cbRecaptchaRender(id);
+					});
+			});
+	};
+</script>
+<script src="//www.google.com/recaptcha/api.js?onload=cbRecaptchaOnload&render=explicit" async defer></script>
 EOD
 , // Limitation of heredoc
 	),
