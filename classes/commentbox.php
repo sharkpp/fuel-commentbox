@@ -165,15 +165,6 @@ class Commentbox
 
 	protected function create_form($comment_key)
 	{
-		$authorized = \Auth::check();
-
-		// ゲストの書き込み許可
-		if (! $authorized &&
-			! $this->get_config('guest', false))
-		{
-			return '';
-		}
-
 		$form = $this->fieldset();
 
 		$html = $this->get_template('form');
@@ -193,7 +184,7 @@ class Commentbox
 			
 		}
 
-		if ($authorized)
+		if (\Auth::check())
 		{
 			$html = str_replace('{name_field}',  '', $html);
 			$html = str_replace('{email_field}', '', $html);
@@ -223,7 +214,31 @@ class Commentbox
 	*/
 	public function form()
 	{
-		return $this->create_form($this->comment_key);
+		// ゲストの書き込み許可
+		if (! \Auth::check() &&
+			! $this->get_config('guest', false))
+		{
+			return '';
+		}
+
+		$errors = '';
+		if ($this->errors())
+		{
+			$error_template = $this->get_template('form_error_item');
+	
+			$errors = $this->get_template('form_errors_wrap');
+			foreach ($this->errors() as $error)
+			{
+				$errors = str_replace('{errors}', str_replace('{error}', e($error), $error_template).'{errors}', $errors);
+			}
+			$errors = str_replace('{errors}', '', $errors);
+		}
+
+		$html = $this->get_template('form_wrap');
+		$html = str_replace('{form}', $this->create_form($this->comment_key), $html);
+		$html = str_replace('{errors}', $errors, $html);
+		
+		return $html;
 	}
 
 	public function comments()
@@ -272,8 +287,9 @@ class Commentbox
 			$html .= $tree2html($item['children']);
 		}
 
+		$html = str_replace('{comments}', $html, $this->get_template('comments_wrap'));
+
 		return $html;
-		return '<pre>'.print_r($root ? $root->dump_tree() : false, true).'</pre>';
 	}
 
 	/**
@@ -348,7 +364,7 @@ class Commentbox
 		return true;
 	}
 
-	public function error()
+	public function errors()
 	{
 		return $this->fieldset()->validation()->error();
 	}

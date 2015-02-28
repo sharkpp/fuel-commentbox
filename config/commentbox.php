@@ -58,6 +58,16 @@ return array(
 	// default commentbox template
 	'default' => array(
 
+		'form_wrap' => <<<EOD
+<div class="panel panel-default">
+  <div class="panel-body">
+{form}
+{errors}
+  </div>
+</div>
+EOD
+, // Limitation of heredoc
+
 		// comment form template
 		'form' => <<<EOD
 {open}
@@ -69,6 +79,29 @@ return array(
 	<div class="form-group">{submit}</div>
 </div>
 {close}
+EOD
+, // Limitation of heredoc
+
+		'form_errors_wrap' => <<<EOD
+<div class="alert alert-danger" role="alert">
+  <ul>
+{errors}
+  </ul>
+</div>
+EOD
+, // Limitation of heredoc
+
+		'form_error_item' => <<<EOD
+<li>{error}</li>
+EOD
+, // Limitation of heredoc
+
+		'comments_wrap' => <<<EOD
+<div class="panel panel-default">
+  <div class="panel-body">
+{comments}
+  </div>
+</div>
 EOD
 , // Limitation of heredoc
 

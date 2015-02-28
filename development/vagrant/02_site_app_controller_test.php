@@ -99,7 +99,6 @@ class Controller_Test extends Controller
 			\Response::forge(
 				\View::forge('test/index')
 					->set_safe('commentbox_form', $commentbox->form())
-					->set_safe('commentbox_error', sprintf('<ul><li>%s</li></ul>', implode('</li><li>', $commentbox->error())))
 					->set_safe('commentbox_comments', $commentbox->comments())
 			);
 	}

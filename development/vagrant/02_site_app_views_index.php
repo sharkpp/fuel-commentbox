@@ -136,18 +136,9 @@ function is_active($key, $value, $default = '')
   </div>
 </div>
 
-<div class="panel panel-default">
-  <div class="panel-body">
 <?php echo $commentbox_form; ?>
-<?php echo $commentbox_error; ?>
-  </div>
-</div>
 
-<div class="panel panel-default">
-  <div class="panel-body">
 <?php echo $commentbox_comments; ?>
-  </div>
-</div>
 
 </div><!-- /col-md-9 col-md-pull-3 -->
 
