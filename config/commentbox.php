@@ -52,7 +52,7 @@ return array(
 		),
 	),
 
-	// reCAPTCHA config
+	// reCAPTCHA config (for comment post by guest)
 	'recaptcha' => array(
 		'enable' => false,
 		'site_key' => 'fill your site key here',
@@ -65,6 +65,11 @@ return array(
 	// default commentbox template
 	'default' => array(
 
+		// form wrap template
+		//   availabled tags
+		//     {form}   : form area
+		//     {errors} : submit error area
+		//     {recaptcha_script} : reCAPTCHA init script
 		'form_wrap' => <<<EOD
 <div class="panel panel-default">
   <div class="panel-body">
@@ -77,6 +82,15 @@ EOD
 , // Limitation of heredoc
 
 		// comment form template
+		//   availabled tags
+		//     {open}          : form open
+		//     {close}         : form close
+		//     {body_field}    : comment body input field
+		//     {name_field}    : username input field (optional)
+		//     {email_field}   : email input field (optional)
+		//     {website_field} : website input field (optional)
+		//     {submit}        : submit button
+		//     {comment_key}   : comment key value
 		'form' => <<<EOD
 {open}
 <div class="form-group">{body_field}</div>
@@ -91,20 +105,29 @@ EOD
 EOD
 , // Limitation of heredoc
 
+		// form errors wrap template
+		//   availabled tags
+		//     {errors} : submit errors
 		'form_errors_wrap' => <<<EOD
 <div class="alert alert-danger" role="alert">
-  <ul>
+  <ul class="list-unstyled">
 {errors}
   </ul>
 </div>
 EOD
 , // Limitation of heredoc
 
+		// form error item template
+		//   availabled tags
+		//     {error} : submit error
 		'form_error_item' => <<<EOD
 <li>{error}</li>
 EOD
 , // Limitation of heredoc
 
+		// comment tree wrap template
+		//   availabled tags
+		//     {comments} : comment tree area
 		'comments_wrap' => <<<EOD
 <div class="panel panel-default">
   <div class="panel-body">
@@ -115,6 +138,14 @@ EOD
 , // Limitation of heredoc
 
 		// comment tree template
+		//   availabled tags
+		//     {avatar} : user avatar area
+		//     {name}   : username input area
+		//     {email}  : email input area
+		//     {time}   : post time
+		//     {body}   : comment body input area
+		//     {reply_button} : reply button, see 'reply_button' template
+		//     {reply_form}   : reply form area, see 'form' template
 		'comments' =>  <<<EOD
 <hr>
 <div class="media">
@@ -136,12 +167,17 @@ EOD
 EOD
 , // Limitation of heredoc
 
+		// comment reply button template
+		//   availabled tags
+		//     {comment_key} : comment key value
 		'comment_reply_button' => <<<EOD
 <a href="#" id="commentbox_reply_button_{comment_key}" onclick="$(this).next().toggleClass('hidden');return false;">Reply</a>
 EOD
 , // Limitation of heredoc
 
-		// reCAPTCHA onload event script
+		// reCAPTCHA script code
+		//   availabled tags
+		//     {recaptcha_site_key} : reCAPTCHA site key value
 		'recaptcha_script' => <<<EOD
 <script type="text/javascript">
 	var cbRecaptchaRender = function(id) {
