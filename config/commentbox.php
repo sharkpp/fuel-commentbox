@@ -153,7 +153,7 @@ EOD
 		<span class="media-object">{avatar}</span>
 	</div>
 	<div class="media-body">
-		<h4 class="media-heading">{name} ({email}) <small>{time}</small></h4>
+		<h4 class="media-heading">{name} <small>{time}</small></h4>
 		{body}</br>
 		{reply_button}
 <div class="panel panel-default hidden">
