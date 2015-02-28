@@ -131,6 +131,10 @@ class Commentbox
 	{
 		if ( ! $this->fieldset)
 		{
+			$use_recaptcha
+				= $this->get_config('recaptcha.enable', false) &&
+				  ! \Auth::check();
+
 			$this->fieldset = \Fieldset::forge('commentbox');
 			$this->fieldset
 				->add('comment_key', '')
@@ -156,10 +160,13 @@ class Commentbox
 				->add_rule('trim')
 				->add_rule('required');
 			$this->fieldset
-				->add('submit', '', array('type'=>'submit', 'value' => '送信', 'class' => 'form-control',
-				                          'disabled' => 'disabled'));
+				->add('submit', '', \Arr::merge(
+				                        array('type'=>'submit', 'value' => '送信', 'class' => 'form-control'),
+				                        $use_recaptcha
+				                            ? array('disabled' => 'disabled')
+				                            : array()));
 
-			if ($this->get_config('recaptcha.enable', false))
+			if ($use_recaptcha)
 			{
 				$this->fieldset
 					->validation()
@@ -209,7 +216,8 @@ class Commentbox
 		                                              array('id' => 'commentbox_submit_' . $comment_key))),
 		                    $html);
 		$html = str_replace('{open}',
-		                    \Form::open(array('method' => 'post'))
+		                    \Form::open(array('method' => 'post',
+		                                      'action' => \Uri::create(\Uri::string(), array(), \Input::get())))
 		                    . \Form::csrf()
 		                    . \Form::hidden('comment_key', $comment_key),
 		                    $html);
@@ -228,8 +236,10 @@ class Commentbox
 	*/
 	public function form()
 	{
+		$authorized = \Auth::check();
+
 		// ゲストの書き込み許可
-		if (! \Auth::check() &&
+		if (! $authorized &&
 			! $this->get_config('guest', false))
 		{
 			return '';
@@ -248,8 +258,12 @@ class Commentbox
 			$errors = str_replace('{errors}', '', $errors);
 		}
 
+		$use_recaptcha
+			= $this->get_config('recaptcha.enable', false) &&
+			  ! $authorized;
+
 		$recaptcha_script = '';
-		if ($this->get_config('recaptcha.enable', false))
+		if ($use_recaptcha)
 		{
 			$recaptcha_script = $this->get_template('recaptcha_script');
 			$recaptcha_script = str_replace('{recaptcha_site_key}', $this->get_config('recaptcha.site_key', ''), $recaptcha_script);
