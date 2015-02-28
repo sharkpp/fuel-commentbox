@@ -7,7 +7,7 @@
 ## ToDo
 
 * <del>ゲスト書き込みの有効/無効</del>
-* recaptcha 対応
+* <del>recaptcha 対応</del>
 
 ## 機能
 
