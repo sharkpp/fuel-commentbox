@@ -61,6 +61,7 @@ class Controller_Test extends Controller
 				'guest' => 'disable' != \Input::get('guest', \Config::get('commentbox.guest') ? 'enable' : 'disable'),
 				'recaptcha' => array(
 					'enable' => 'disable' != \Input::get('recaptcha', \Config::get('commentbox.recaptcha.enable') ? 'enable' : 'disable'),
+					'always_use' => 'always' == \Input::get('recaptcha_always', \Config::get('commentbox.recaptcha.always_use') ? 'always' : 'none'),
 				),
 				'avatar' => array(
 					'service' => \Input::get('avatar', \Config::get('commentbox.avatar.service')),

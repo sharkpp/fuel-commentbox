@@ -133,7 +133,8 @@ class Commentbox
 		{
 			$use_recaptcha
 				= $this->get_config('recaptcha.enable', false) &&
-				  ! \Auth::check();
+				  ($this->get_config('recaptcha.always_use', false) ||
+				   ! \Auth::check());
 
 			$this->fieldset = \Fieldset::forge('commentbox');
 			$this->fieldset
@@ -260,7 +261,8 @@ class Commentbox
 
 		$use_recaptcha
 			= $this->get_config('recaptcha.enable', false) &&
-			  ! $authorized;
+			  ($this->get_config('recaptcha.always_use', false) ||
+			   ! $authorized);
 
 		$recaptcha_script = '';
 		if ($use_recaptcha)

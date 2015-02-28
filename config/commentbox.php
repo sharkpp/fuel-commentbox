@@ -53,9 +53,19 @@ return array(
 	),
 
 	// reCAPTCHA config (for comment post by guest)
+	//   https://developers.google.com/recaptcha/
 	'recaptcha' => array(
+
+		// enable or disable reCAPTCHA
 		'enable' => false,
+
+		// always use reCAPTCHA, guest and loggdin
+		'always_use' => false,
+
+		// Site key
 		'site_key' => 'fill your site key here',
+
+		// Secret key
 		'secret_key' => 'fill your secret key here',
 	),
 

@@ -109,6 +109,14 @@ function is_active($key, $value, $default = '')
     </ul>
   </li>
 
+  <li class="">
+    <a href="#" class="disabled">reCAPTCHA always</a>
+    <ul class="nav">
+      <li><a href="<?php echo get_url('recaptcha_always', 'always'); ?>"><i class="<?php echo is_active('recaptcha_always', 'always', 'none'); ?>"></i> enable</a></li>
+      <li><a href="<?php echo get_url('recaptcha_always', 'none'); ?>"><i class="<?php echo is_active('recaptcha_always', 'none', 'none'); ?>"></i> disable</a></li>
+    </ul>
+  </li>
+
 </ul>
           </nav>
 
