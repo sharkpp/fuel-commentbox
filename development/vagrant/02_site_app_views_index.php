@@ -83,6 +83,14 @@ function is_active($key, $value, $default = '')
   </li>
 
   <li class="">
+    <a href="#" class="disabled">Language</a>
+    <ul class="nav">
+      <li><a href="<?php echo get_url('lang', 'en'); ?>"><i class="<?php echo is_active('lang', 'en', 'en'); ?>"></i> en</a></li>
+      <li><a href="<?php echo get_url('lang', 'ja'); ?>"><i class="<?php echo is_active('lang', 'ja', 'en'); ?>"></i> ja</a></li>
+    </ul>
+  </li>
+
+  <li class="">
     <a href="#" class="disabled">Avatar</a>
     <ul class="nav">
       <li><a href="<?php echo get_url('avatar', 'none'); ?>"><i class="<?php echo is_active('avatar', 'none', 'gravatar'); ?>"></i> none</a></li>

@@ -49,7 +49,7 @@ This package allows you to easily add embedded comments area to FuelPHP.
 
 Display of the default form template is as follows.
 
-![example screenshot](docs/img/example.png)
+![example screenshot](docs/img/example_en.png)
 
 ## Configuration
 

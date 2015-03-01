@@ -35,7 +35,7 @@ return array(
 		//   adorable : http://avatars.adorable.io/
 		'service' => 'gravatar',
 
-		// gravatar options
+		// Gravatar options
 		//   see: http://en.gravatar.com/site/implement/images/
 		'gravatar' => array(
 			'd' => 'identicon', // defaults: 404, mm, identicon, monsterid, wavatar, retro, blank
@@ -43,7 +43,7 @@ return array(
 		//	'r' => 'g', // Rating: g, pg, r, x
 		),
 
-		// robohash options
+		// RoboHash options
 		//   see: http://robohash.org/
 		'robohash' => array(
 		//	'bgset' => 'bg1', // Robots at your Location: bg1, bg2
@@ -59,7 +59,7 @@ return array(
 		// enable or disable reCAPTCHA
 		'enable' => false,
 
-		// always use reCAPTCHA, guest and loggdin
+		// always use reCAPTCHA, guest and logged in
 		'always_use' => false,
 
 		// Site key
@@ -179,9 +179,10 @@ EOD
 
 		// comment reply button template
 		//   availabled tags
-		//     {comment_key} : comment key value
+		//     {comment_key}   : comment key value
+		//     {reply_caption} : reply caption
 		'comment_reply_button' => <<<EOD
-<a href="#" id="commentbox_reply_button_{comment_key}" onclick="$(this).next().toggleClass('hidden');return false;">Reply</a>
+<a href="#" id="commentbox_reply_button_{comment_key}" onclick="$(this).next().toggleClass('hidden');return false;">{reply_caption}</a>
 EOD
 , // Limitation of heredoc
 

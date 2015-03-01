@@ -49,7 +49,7 @@
 
 デフォルトのフォームテンプレートでの表示は次のようになります。
 
-![example screenshot](docs/img/example.png)
+![example screenshot](docs/img/example_ja.png)
 
 ## 設定
 
@@ -82,15 +82,15 @@
 
 ### reCAPTCHA の表示マトリックス
 
-| **not logged in**              | `'recaptcha.always_use' === false` | `'recaptcha.always_use' === true` |
+| **未ログイン**                 | `'recaptcha.always_use' === false` | `'recaptcha.always_use' === true` |
 |--------------------------------|------------------------------------|-----------------------------------|
-| `'recaptcha.enable' === false` |     reCAPTCHA is not displayed     |     reCAPTCHA is not displayed    |
-| `'recaptcha.enable' === true`  |     **reCAPTCHA is displayed**     |     **reCAPTCHA is displayed**    |
+| `'recaptcha.enable' === false` |      reCAPTCHA は表示されない      |      reCAPTCHA は表示されない     |
+| `'recaptcha.enable' === true`  |     **reCAPTCHA は表示される**     |     **reCAPTCHA は表示される**    |
 
-| **logged in**                  | `'recaptcha.always_use' === false` | `'recaptcha.always_use' === true` |
+| **ログイン**                    | `'recaptcha.always_use' === false` | `'recaptcha.always_use' === true` |
 |--------------------------------|------------------------------------|-----------------------------------|
-| `'recaptcha.enable' === false` |     reCAPTCHA is not displayed     |     reCAPTCHA is not displayed    |
-| `'recaptcha.enable' === true`  |     reCAPTCHA is not displayed     |     **reCAPTCHA is displayed**    |
+| `'recaptcha.enable' === false` |      reCAPTCHA は表示されない      |      reCAPTCHA は表示されない     |
+| `'recaptcha.enable' === true`  |      reCAPTCHA は表示されない      |     **reCAPTCHA は表示される**    |
 
 ## ライセンス
 

@@ -46,6 +46,7 @@ class Commentbox
 	public static function _init()
 	{
 		\Config::load('commentbox', true);
+		\Lang::load('commentbox', true);
 	}
 
 	/**
@@ -143,26 +144,31 @@ class Commentbox
 			if ( ! \Auth::check())
 			{
 				$this->fieldset
-					->add('name', '名前', array('class' => 'form-control'))
+					->add('name', __('commentbox.form.name'),
+					      array('class' => 'form-control'))
 					->add_rule('trim')
 					->add_rule('max_length', 50);
 				$this->fieldset
-					->add('email', 'メールアドレス', array('type' => 'email', 'class' => 'form-control'))
+					->add('email', __('commentbox.form.email'),
+					      array('type' => 'email', 'class' => 'form-control'))
 					->add_rule('trim')
 					->add_rule('valid_email')
 					->add_rule('max_length', 255);
 			}
 			$this->fieldset
-				->add('website', 'ウェブサイト', array('type' => 'url', 'class' => 'form-control'))
+				->add('website', __('commentbox.form.website'),
+				      array('type' => 'url', 'class' => 'form-control'))
 				->add_rule('trim')
 				->add_rule('valid_url');
 			$this->fieldset
-				->add('body', '本文', array('type' => 'textarea', 'class' => 'form-control'))
+				->add('body', __('commentbox.form.body'),
+				      array('type' => 'textarea', 'class' => 'form-control'))
 				->add_rule('trim')
 				->add_rule('required');
 			$this->fieldset
 				->add('submit', '', \Arr::merge(
-				                        array('type'=>'submit', 'value' => '送信', 'class' => 'form-control'),
+				                        array('type'=>'submit', 'value' => __('commentbox.form.submit'),
+				                              'class' => 'form-control'),
 				                        $use_recaptcha
 				                            ? array('disabled' => 'disabled')
 				                            : array()));
@@ -306,14 +312,15 @@ class Commentbox
 									));
 					$tmp = $template;
 					$tmp = str_replace('{body}', $item['body'], $tmp);
-					$tmp = str_replace('{name}', empty($user_info['name']) ? '匿名' : $user_info['name'], $tmp);
+					$tmp = str_replace('{name}', empty($user_info['name']) ? __('commentbox.anonymous') : $user_info['name'], $tmp);
 					$tmp = str_replace('{email}', $user_info['email'], $tmp);
 					$tmp = str_replace('{time}', \Date::time_ago($item['created_at']), $tmp);
 					$tmp = str_replace('{avatar}', $avatar->get_html($user_info['name'], $user_info['email'],
 					                                                 array('class' => 'img-rounded')), $tmp);
 					$tmp = str_replace('{reply_button}', ! $guest_comment ? ''
 					                                     : str_replace('{comment_key}', $item['comment_key'],
-					                                                   $this->get_template('comment_reply_button')),
+					                                       str_replace('{reply_caption}', __('commentbox.reply'),
+					                                                   $this->get_template('comment_reply_button'))),
 					                                     $tmp);
 					$tmp = str_replace('{reply_form}', ! $guest_comment 
 					                                   ? '' : $this->create_form($item['comment_key']), $tmp);

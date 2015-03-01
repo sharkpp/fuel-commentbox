@@ -54,6 +54,8 @@ class Controller_Test extends Controller
 				->add_rule('required');
 		}
 
+		\Config::set('language', \Input::get('lang', \Config::get('language')));
+
 		\Config::load('commentbox', true);
 \Log::error(print_r(\Input::post(), true));\Log::error(print_r(\Input::get(), true));
 \Log::error(print_r($_POST, true));\Log::error(print_r($_GET, true));

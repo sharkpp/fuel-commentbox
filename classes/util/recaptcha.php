@@ -108,7 +108,16 @@ class Recaptcha
 			return true;
 		}
 
-		$this->last_error = implode(PHP_EOL, \Arr::get($result, 'error-codes', array()));
+		\Log::debug(implode('\n', \Arr::get($result, 'error-codes', array())));
+
+		$this->last_error = array();
+		foreach (\Arr::get($result, 'error-codes', array()) as $error)
+		{
+			$this->last_error[]
+				= \Lang::get('commentbox.recaptcha.'.$error, array(), $error);
+		}
+
+		$this->last_error = implode(PHP_EOL, \Arr::unique($this->last_error));
 
 		return false;
 	}
