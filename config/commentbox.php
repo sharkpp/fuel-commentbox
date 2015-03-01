@@ -52,7 +52,7 @@ return array(
 		),
 	),
 
-	// reCAPTCHA config (for comment post by guest)
+	// reCAPTCHA config
 	//   https://developers.google.com/recaptcha/
 	'recaptcha' => array(
 
@@ -69,7 +69,7 @@ return array(
 		'secret_key' => 'fill your secret key here',
 	),
 
-	// the active pagination template
+	// the active commentbox template
 	'active' => 'default',
 
 	// default commentbox template
