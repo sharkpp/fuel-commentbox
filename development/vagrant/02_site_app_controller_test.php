@@ -61,6 +61,7 @@ class Controller_Test extends Controller
 \Log::error(print_r($_POST, true));\Log::error(print_r($_GET, true));
 		$config = array(
 				'guest' => 'disable' != \Input::get('guest', \Config::get('commentbox.guest') ? 'enable' : 'disable'),
+				'active' => \Input::get('theme', \Config::get('commentbox.active')),
 				'recaptcha' => array(
 					'enable' => 'disable' != \Input::get('recaptcha', \Config::get('commentbox.recaptcha.enable') ? 'enable' : 'disable'),
 					'always_use' => 'always' == \Input::get('recaptcha_always', \Config::get('commentbox.recaptcha.always_use') ? 'always' : 'none'),
@@ -103,8 +104,7 @@ class Controller_Test extends Controller
 		return
 			\Response::forge(
 				\View::forge('test/index')
-					->set_safe('commentbox_form', $commentbox->form())
-					->set_safe('commentbox_comments', $commentbox->comments())
+					->set_safe('commentbox', $commentbox->render())
 			);
 	}
 }

@@ -42,8 +42,7 @@ This package allows you to easily add embedded comments area to FuelPHP.
 
 ### Implementation example of View
 
-    <?php echo $commentbox->form(); ?>
-    <?php echo $commentbox->comments(); ?>
+    <?php echo $commentbox->render(); ?>
 
 ### Screen example
 
@@ -67,8 +66,11 @@ Display of the default form template is as follows.
 | `'recaptcha.always_use'` |      `false`     | always use reCAPTCHA, guest and logged in |
 | `'recaptcha.site_key'`   |                  | Site key |
 | `'recaptcha.secret_key'` |                  | Secret key |
+| `'user_page'`            | `'users/{user_name}'` | user page link |
 | `'active'`               |    `'default'`   | the active commentbox template |
 | `'default'`              |                  | default commentbox template |
+| `'disqus'`               |                  | disqus like commentbox template |
+| `'stackoverflow'`        |                  | stackoverflow like commentbox template |
 
 ### Avatar service
 

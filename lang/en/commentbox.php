@@ -1,6 +1,8 @@
 <?php
 
 return array(
+	'comment_num'	=> ':num Comment',
+	'comments_num'	=> ':num Comments',
 	'anonymous'		=> 'Anonymous',
 	'reply'			=> 'Reply',
 	'form' => array(

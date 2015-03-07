@@ -6,8 +6,12 @@
 
 ## ToDo
 
-* <del>ゲスト書き込みの有効/無効</del>
-* <del>recaptcha 対応</del>
+* テンプレート
+	* <del>Youtube 風</del>
+	* <del>[Isso – a commenting server similar to Disqus](http://posativ.org/isso/) 風</del>
+	* <del>[Disqus](https://disqus.com/home/discussion/techcrunchjapan/apple_techcrunch_26/) 風</del>
+	* <del>[スタック・オーバーフロー](http://ja.stackoverflow.com/questions/7365/) 風</del>
+* モデレート
 
 ## 機能
 

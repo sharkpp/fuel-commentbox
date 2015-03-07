@@ -91,6 +91,15 @@ function is_active($key, $value, $default = '')
   </li>
 
   <li class="">
+    <a href="#">Theme</a>
+    <ul class="nav">
+      <li><a href="<?php echo get_url('theme', 'default'); ?>"><i class="<?php echo is_active('theme', 'default', 'default'); ?>"></i> bootstrap3</a></li>
+      <li><a href="<?php echo get_url('theme', 'disqus'); ?>"><i class="<?php echo is_active('theme', 'disqus', 'default'); ?>"></i> Disqus like</a></li>
+      <li><a href="<?php echo get_url('theme', 'stackoverflow'); ?>"><i class="<?php echo is_active('theme', 'stackoverflow', 'default'); ?>"></i> StackOverflow like</a></li>
+    </ul>
+  </li>
+
+  <li class="">
     <a href="#" class="disabled">Avatar</a>
     <ul class="nav">
       <li><a href="<?php echo get_url('avatar', 'none'); ?>"><i class="<?php echo is_active('avatar', 'none', 'gravatar'); ?>"></i> none</a></li>
@@ -160,9 +169,7 @@ function is_active($key, $value, $default = '')
   </div>
 </div>
 
-<?php echo $commentbox_form; ?>
-
-<?php echo $commentbox_comments; ?>
+<?php echo $commentbox; ?>
 
 </div><!-- /col-md-9 col-md-pull-3 -->
 

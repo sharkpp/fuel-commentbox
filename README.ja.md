@@ -42,8 +42,7 @@
 
 ### ビューの実装例
 
-    <?php echo $commentbox->form(); ?>
-    <?php echo $commentbox->comments(); ?>
+    <?php echo $commentbox->render(); ?>
 
 ### 画面例
 
@@ -67,8 +66,11 @@
 | `'recaptcha.always_use'` |      `false`     | 常にreCAPTCHAを使用する、ゲストとログイン |
 | `'recaptcha.site_key'`   |                  | Site key |
 | `'recaptcha.secret_key'` |                  | Secret key |
+| `'user_page'`            | `'users/{user_name}'` | ユーザーページへのリンク |
 | `'active'`               |    `'default'`   | アクティブな commentbox テンプレート |
 | `'default'`              |                  | デフォルトの commentbox テンプレート |
+| `'disqus'`               |                  | disqus 風 commentbox テンプレート |
+| `'stackoverflow'`        |                  | stackoverflow 風 commentbox テンプレート |
 
 ### アバターサービス
 

@@ -41,6 +41,12 @@ class Commentbox
 	protected $fieldset = null;
 
 	/**
+	 * Comment num
+	 * @var array
+	 */
+	protected $comment_num = 0;
+
+	/**
 	 * Init
 	 */
 	public static function _init()
@@ -119,13 +125,35 @@ class Commentbox
 	 *
 	 * @param  string $key     設定値名
 	 * @param  mixed  $default 初期値
+	 * @param  mixed  $tags    置き換えタグ( array( 'xx' => 'yy', ... ) )
 	 * @return 設定値
 	 */
-	protected function get_template($key, $default = null)
+	protected function get_template($key, $default = null, $tags = array())
 	{
-		$active_template = $this->get_config('active', 'default');
+		return $this->replace_tags(
+					$this->get_config(
+						$this->get_config('active', 'default') . '.' . $key,
+						$default),
+					$tags);
+	}
 
-		return $this->get_config($active_template.'.'.$key, $default);
+	/**
+	 * 文字列内のタグを置き換える
+	 *
+	 * @param  string $text    対象の文字列
+	 * @param  mixed  $tags    置き換えタグ( array( 'xx' => 'yy', ... ) )
+	 * @return 設定値
+	 */
+	protected function replace_tags($text, $tags = array())
+	{
+		$result = $text;
+
+		foreach ($tags as $tag => $value)
+		{
+			$result = str_replace('{' . $tag . '}', $value, $result);
+		}
+
+		return $result;
 	}
 
 	protected function fieldset()
@@ -235,11 +263,28 @@ class Commentbox
 	}
 
 	/**
-	* Get a config setting.
+	* フォームとコメントツリーを取得
 	*
-	* @param string $key the config key
-	* @param mixed  $default the default value
-	* @return mixed the config setting value
+	* @return string フォームとコメントツリーのHTML
+	*/
+	public function render()
+	{
+		$comments = $this->comments();
+		return $this->get_template('commentbox', '', array(
+					'form' => $this->form(),
+					'comments' => $comments,
+					'comment_num' =>
+						__('commentbox.' .
+						   (1 < $this->comment_num ? 'comments_num'
+						                           : 'comment_num'),
+						   array('num' => $this->comment_num))
+				));
+	}
+
+	/**
+	* フォームを取得
+	*
+	* @return string フォームのHTML
 	*/
 	public function form()
 	{
@@ -285,6 +330,11 @@ class Commentbox
 		return $html;
 	}
 
+	/**
+	* コメントツリーを取得
+	*
+	* @return string コメントツリーのHTML
+	*/
 	public function comments()
 	{
 		// ゲストの書き込み許可
@@ -296,38 +346,68 @@ class Commentbox
 		$root = Model_Commentbox::get_parent($this->comment_key);
 		$tree = $root ? $root->dump_tree() : array();
 
-		$template = $this->get_template('comments');
+		$user_page_empty
+			= $this->replace_tags($this->get_config('user_page', ''), array(
+					'user_id' => '',
+					'user_name' => '',
+				));
 
 		$avatar = Avatar::forge($this->get_config('avatar', array()));
 
-		$tree2html = function($tree) use ($template, &$avatar, &$tree2html, $guest_comment) {
+		$comments_tmpl = $this->get_template('comments');
+
+		$depth = -1;
+
+		$this->comment_num = 0;
+
+		$tree2html = function($tree) use ($comments_tmpl, $user_page_empty,
+		                                  &$depth, &$avatar, &$tree2html, $guest_comment) {
 				$html = '';
+				$depth++;
 				foreach ($tree as $item)
 				{
-					$user_info = self::get_user_info(
+					$this->comment_num++;
+					$u = self::get_user_info(
 									$item['user_id'],
 									array(
 										'name' => $item['name'],
+										'webpage' => '',
 										'email' => $item['email']
 									));
-					$tmp = $template;
-					$tmp = str_replace('{body}', $item['body'], $tmp);
-					$tmp = str_replace('{name}', empty($user_info['name']) ? __('commentbox.anonymous') : $user_info['name'], $tmp);
-					$tmp = str_replace('{email}', $user_info['email'], $tmp);
-					$tmp = str_replace('{time}', \Date::time_ago($item['created_at']), $tmp);
-					$tmp = str_replace('{avatar}', $avatar->get_html($user_info['name'], $user_info['email'],
-					                                                 array('class' => 'img-rounded')), $tmp);
-					$tmp = str_replace('{reply_button}', ! $guest_comment ? ''
-					                                     : str_replace('{comment_key}', $item['comment_key'],
-					                                       str_replace('{reply_caption}', __('commentbox.reply'),
-					                                                   $this->get_template('comment_reply_button'))),
-					                                     $tmp);
-					$tmp = str_replace('{reply_form}', ! $guest_comment 
-					                                   ? '' : $this->create_form($item['comment_key']), $tmp);
-					$tmp = str_replace('{comment_key}', $item['comment_key'], $tmp);
-					$tmp = str_replace('{child}', $tree2html($item['children']), $tmp);
-					$html .= $tmp;
+					$name       = empty($u['name']) ? __('commentbox.anonymous') : $u['name'];
+					$avatar_img = $avatar->get_html($u['name'], $u['email'], array('class' => 'img-rounded'));
+					$user_page  = $this->replace_tags($this->get_config('user_page', ''), array(
+										'user_id' => -1 == $item['user_id'] ? '' : $item['user_id'],
+										'user_name' => $u['name'],
+									));
+					$user_page  = $user_page == $user_page_empty ? '' : $user_page;
+
+					$tmpl_name   = 0 < $depth ? 'comments_2nd' : 'comments';
+					$tmpl_default= 0 < $depth ? $comments_tmpl : '';
+					$html .= $this->get_template($tmpl_name, $tmpl_default, array(
+							'body' => $item['body'],
+							'name' => $name,
+							'name_webpage' => $u['webpage'] ? \Html::anchor($u['webpage'], $name) : $name,
+							'name_userpage' => $user_page ? \Html::anchor($user_page, $name) : $name,
+							'name_email' => $u['email'] ? \Html::anchor('mailto:' . $u['email'], $name) : $name,
+							'email' => $u['email'],
+							'webpage' => $u['webpage'],
+							'time' => \Date::time_ago($item['created_at']),
+							'avatar' => $avatar_img,
+							'avatar_webpage' => $u['webpage'] ? \Html::anchor($u['webpage'], $avatar_img) : $avatar_img,
+							'avatar_userpage' => $user_page ? \Html::anchor($user_page, $avatar_img) : $avatar_img,
+							'avatar_email' => $u['email'] ? \Html::anchor('mailto:' . $u['email'], $avatar_img) : $avatar_img,
+							'reply_button' => ! $guest_comment ? ''
+							                  : str_replace('{comment_key}', $item['comment_key'],
+							                    str_replace('{reply_caption}', __('commentbox.reply'),
+							                                $this->get_template('comment_reply_button'))),
+							'reply_form' => ! $guest_comment 
+							                ? '' : $this->create_form($item['comment_key']),
+							'comment_key' => $item['comment_key'],
+							'child' => $tree2html($item['children']),
+						));
 				}
+				$depth--;
 				return $html;
 			};
 
