@@ -220,53 +220,45 @@ class Commentbox
 	{
 		$form = $this->fieldset();
 
-		$html = $this->get_template('form');
+		$tags = array();
 
 		foreach ($form->field() as $field)
 		{
 			$attributes = \Arr::merge(
 				array('placeholder' => $field->label),
 				$field->get_attribute());
-			$html = str_replace(
-						'{'.$field->name.'_field}',
-						'textarea' == \Arr::get($field->get_attribute(), 'type')
-							? \Form::textarea($field->name, '', $attributes)
-							: \Form::input   ($field->name, '', $attributes),
-						$html
-					);
+			$tags[$field->name . '_field'] =
+				'textarea' == \Arr::get($field->get_attribute(), 'type')
+					? \Form::textarea($field->name, '', $attributes)
+					: \Form::input   ($field->name, '', $attributes);
 			
 		}
 
 		if (\Auth::check())
 		{
-			$html = str_replace('{name_field}',  '', $html);
-			$html = str_replace('{email_field}', '', $html);
+			$tags['name_field'] = '';
+			$tags['email_field'] = '';
 		}
 
-		$html = str_replace('{comment_key}', $comment_key, $html);
-		$html = str_replace('{submit}',
-		                    \Form::submit($form->field('submit')->name,
+		$tags['comment_key'] = $comment_key;
+		$tags['submit'] =   \Form::submit($form->field('submit')->name,
 		                                  $form->field('submit')->get_attribute('value'),
 		                                  \Arr::merge($form->field('submit')->get_attribute(),
-		                                              array('id' => 'commentbox_submit_' . $comment_key))),
-		                    $html);
-		$html = str_replace('{open}',
-		                    \Form::open(array('method' => 'post',
+		                                              array('id' => 'commentbox_submit_' . $comment_key)));
+		$tags['open'] =     \Form::open(array('method' => 'post',
 		                                      'action' => \Uri::create(\Uri::string(), array(), \Input::get())))
 		                    . \Form::csrf()
-		                    . \Form::hidden('comment_key', $comment_key),
-		                    $html);
-		$html = str_replace('{close}',
-		                    \Form::close(), $html);
+		                    . \Form::hidden('comment_key', $comment_key);
+		$tags['close'] =    \Form::close();
 
-		return $html;
+		return $this->get_template('form', '', $tags);
 	}
 
 	/**
-	* フォームとコメントツリーを取得
-	*
-	* @return string フォームとコメントツリーのHTML
-	*/
+	 * Get the form and comments tree
+	 *
+	 * @return string HTML of forms and comments tree
+	 */
 	public function render()
 	{
 		$comments = $this->comments();
@@ -282,9 +274,9 @@ class Commentbox
 	}
 
 	/**
-	* フォームを取得
+	* Get form
 	*
-	* @return string フォームのHTML
+	* @return string HTML of form
 	*/
 	public function form()
 	{
@@ -310,30 +302,33 @@ class Commentbox
 			$errors = str_replace('{errors}', '', $errors);
 		}
 
+		// reCAPTCHA を使用するか？
 		$use_recaptcha
 			= $this->get_config('recaptcha.enable', false) &&
 			  ($this->get_config('recaptcha.always_use', false) ||
 			   ! $authorized);
 
-		$recaptcha_script = '';
-		if ($use_recaptcha)
-		{
-			$recaptcha_script = $this->get_template('recaptcha_script');
-			$recaptcha_script = str_replace('{recaptcha_site_key}', $this->get_config('recaptcha.site_key', ''), $recaptcha_script);
-		}
+		// reCAPTCHA 用のスクリプトコードを取得
+		$recaptcha_script =
+			!$use_recaptcha
+				? ''
+				: $this->get_template('recaptcha_script', '', array(
+						'recaptcha_site_key' => $this->get_config('recaptcha.site_key', '')
+					));
 
-		$html = $this->get_template('form_wrap');
-		$html = str_replace('{recaptcha_script}', $recaptcha_script, $html);
-		$html = str_replace('{form}', $this->create_form($this->comment_key), $html);
-		$html = str_replace('{errors}', $errors, $html);
+		$html = $this->get_template('form_wrap', '', array(
+					'recaptcha_script' => $recaptcha_script,
+					'form' => $this->create_form($this->comment_key),
+					'errors' => $errors
+				));
 		
 		return $html;
 	}
 
 	/**
-	* コメントツリーを取得
+	* Get comment tree
 	*
-	* @return string コメントツリーのHTML
+	* @return string HTML of comment tree
 	*/
 	public function comments()
 	{
