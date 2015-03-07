@@ -14,7 +14,6 @@
       line-height: 1em;
       padding-top: 5px;
       padding-bottom: 5px;
-      border-left: 2px solid #ccc;
     }
     li > .nav > li > a {
       font-size: 0.9em;
@@ -74,7 +73,7 @@ function is_active($key, $value, $default = '')
 ?>
 
   <li class="">
-    <a href="#">Pages</a>
+    <a href="#" class="bg-primary">Pages</a>
     <ul class="nav">
       <li><a href="<?php echo get_url('page', ''); ?>"><i class="<?php echo is_active('page', ''); ?>"></i> Main</a></li>
       <li><a href="<?php echo get_url('page', 'sub1'); ?>"><i class="<?php echo is_active('page', 'sub1'); ?>"></i> Sub 1</a></li>
@@ -83,7 +82,7 @@ function is_active($key, $value, $default = '')
   </li>
 
   <li class="">
-    <a href="#" class="disabled">Language</a>
+    <a href="#" class="bg-primary">Language</a>
     <ul class="nav">
       <li><a href="<?php echo get_url('lang', 'en'); ?>"><i class="<?php echo is_active('lang', 'en', 'en'); ?>"></i> en</a></li>
       <li><a href="<?php echo get_url('lang', 'ja'); ?>"><i class="<?php echo is_active('lang', 'ja', 'en'); ?>"></i> ja</a></li>
@@ -91,7 +90,7 @@ function is_active($key, $value, $default = '')
   </li>
 
   <li class="">
-    <a href="#">Theme</a>
+    <a href="#" class="bg-primary">Theme</a>
     <ul class="nav">
       <li><a href="<?php echo get_url('theme', 'default'); ?>"><i class="<?php echo is_active('theme', 'default', 'default'); ?>"></i> bootstrap3</a></li>
       <li><a href="<?php echo get_url('theme', 'disqus'); ?>"><i class="<?php echo is_active('theme', 'disqus', 'default'); ?>"></i> Disqus like</a></li>
@@ -100,7 +99,7 @@ function is_active($key, $value, $default = '')
   </li>
 
   <li class="">
-    <a href="#" class="disabled">Avatar</a>
+    <a href="#" class="bg-primary">Avatar</a>
     <ul class="nav">
       <li><a href="<?php echo get_url('avatar', 'none'); ?>"><i class="<?php echo is_active('avatar', 'none', 'gravatar'); ?>"></i> none</a></li>
       <li><a href="<?php echo get_url('avatar', 'blank'); ?>"><i class="<?php echo is_active('avatar', 'blank', 'gravatar'); ?>"></i> blank</a></li>
@@ -111,7 +110,7 @@ function is_active($key, $value, $default = '')
   </li>
 
   <li class="">
-    <a href="#" class="disabled">Guest</a>
+    <a href="#" class="bg-primary">Guest</a>
     <ul class="nav">
       <li><a href="<?php echo get_url('guest', 'enable'); ?>"><i class="<?php echo is_active('guest', 'enable', 'enable'); ?>"></i> enable</a></li>
       <li><a href="<?php echo get_url('guest', 'disable'); ?>"><i class="<?php echo is_active('guest', 'disable', 'enable'); ?>"></i> disable</a></li>
@@ -119,7 +118,7 @@ function is_active($key, $value, $default = '')
   </li>
 
   <li class="">
-    <a href="#" class="disabled">reCAPTCHA</a>
+    <a href="#" class="bg-primary">reCAPTCHA</a>
     <ul class="nav">
       <li><a href="<?php echo get_url('recaptcha', 'enable'); ?>"><i class="<?php echo is_active('recaptcha', 'enable', 'enable'); ?>"></i> enable</a></li>
       <li><a href="<?php echo get_url('recaptcha', 'disable'); ?>"><i class="<?php echo is_active('recaptcha', 'disable', 'enable'); ?>"></i> disable</a></li>
@@ -127,10 +126,18 @@ function is_active($key, $value, $default = '')
   </li>
 
   <li class="">
-    <a href="#" class="disabled">reCAPTCHA always</a>
+    <a href="#" class="bg-primary">reCAPTCHA always</a>
     <ul class="nav">
       <li><a href="<?php echo get_url('recaptcha_always', 'always'); ?>"><i class="<?php echo is_active('recaptcha_always', 'always', 'none'); ?>"></i> enable</a></li>
       <li><a href="<?php echo get_url('recaptcha_always', 'none'); ?>"><i class="<?php echo is_active('recaptcha_always', 'none', 'none'); ?>"></i> disable</a></li>
+    </ul>
+  </li>
+
+  <li class="">
+    <a href="#" class="bg-primary">full name</a>
+    <ul class="nav">
+      <li><a href="<?php echo get_url('fullname', 'yes'); ?>"><i class="<?php echo is_active('fullname', 'yes', 'yes'); ?>"></i> yes</a></li>
+      <li><a href="<?php echo get_url('fullname', 'no'); ?>"><i class="<?php echo is_active('fullname', 'no', 'yes'); ?>"></i> no</a></li>
     </ul>
   </li>
 

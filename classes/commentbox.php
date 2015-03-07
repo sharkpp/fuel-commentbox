@@ -362,7 +362,7 @@ class Commentbox
 				foreach ($tree as $item)
 				{
 					$this->comment_num++;
-					$u = self::get_user_info(
+					$u = $this->get_user_info(
 									$item['user_id'],
 									array(
 										'name' => $item['name'],
@@ -495,7 +495,7 @@ class Commentbox
 		return $this->fieldset()->validation()->error();
 	}
 
-	protected static function get_user_info($user_id, $default)
+	protected function get_user_info($user_id, $default)
 	{
 		$result = $default;
 		$user = -1 == $user_id
@@ -507,12 +507,27 @@ class Commentbox
 					->get_one();
 		if ($user)
 		{
-			$result['name']
-				= empty(current($user->metadata)->value)
-					? $user->username
-					: current($user->metadata)->value;
+			// Auth パッケージから名称を取得するときに fullname を使用するか？
+			$use_fullname = $this->get_config('use_fullname', true);
+
+			$result['name']  = $user->username;
 			$result['email'] = $user->email;
+
+			foreach ($user->metadata as $metadata)
+			{
+				switch ($metadata->key)
+				{
+				case 'fullname':
+					if ($use_fullname &&
+						!empty($metadata->value))
+					{
+						$result['name'] = $metadata->value;
+					}
+					break;
+				}
+			}
 		}
+
 		return $result;
 	}
 

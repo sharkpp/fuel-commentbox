@@ -56,6 +56,7 @@
 |--------------------------|------------------|-------------|
 | `'table_name'`           | `'commentboxes'` | テーブル名 |
 | `'guest'`                |      `true`      | ゲストコメントの許可 |
+| `'use_fullname'`         |      `true`      | Auth パッケージの完全な名前を使用する |
 | `'avatar'`               |                  | アバター設定 |
 | `'avatar.size'`          |       `48`       | アバターのアイコンサイズ |
 | `'avatar.service'`       |   `'gravatar'`   | アバターサービス ( `none` か `blank` か `gravatar` か  `robohash` か `adorable` ) |

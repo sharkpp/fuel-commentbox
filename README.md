@@ -56,6 +56,7 @@ Display of the default form template is as follows.
 |--------------------------|------------------|-------------|
 | `'table_name'`           | `'commentboxes'` | table name |
 | `'guest'`                |      `true`      | permission of guest comment |
+| `'use_fullname'`         |      `true`      | use full name for Auth package |
 | `'avatar'`               |                  | avatar config |
 | `'avatar.size'`          |       `48`       | avatar icon size |
 | `'avatar.service'`       |   `'gravatar'`   | avatar service ( `none` or `blank` or `gravatar` or  `robohash` or `adorable` ) |

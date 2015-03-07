@@ -18,6 +18,9 @@ return array(
 	// permission of guest comment
 	'guest' => true,
 
+	// use full name for Auth package
+	'use_fullname' => true,
+
 	// avatar config
 	'avatar' => array(
 

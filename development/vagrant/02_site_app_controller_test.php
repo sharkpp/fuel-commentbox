@@ -57,10 +57,9 @@ class Controller_Test extends Controller
 		\Config::set('language', \Input::get('lang', \Config::get('language')));
 
 		\Config::load('commentbox', true);
-\Log::error(print_r(\Input::post(), true));\Log::error(print_r(\Input::get(), true));
-\Log::error(print_r($_POST, true));\Log::error(print_r($_GET, true));
 		$config = array(
 				'guest' => 'disable' != \Input::get('guest', \Config::get('commentbox.guest') ? 'enable' : 'disable'),
+				'use_fullname' => 'no' != \Input::get('fullname', \Config::get('commentbox.use_fullname') ? 'yes' : 'no'),
 				'active' => \Input::get('theme', \Config::get('commentbox.active')),
 				'recaptcha' => array(
 					'enable' => 'disable' != \Input::get('recaptcha', \Config::get('commentbox.recaptcha.enable') ? 'enable' : 'disable'),
