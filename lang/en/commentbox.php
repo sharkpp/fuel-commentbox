@@ -5,6 +5,9 @@ return array(
 	'comments_num'	=> ':num Comments',
 	'anonymous'		=> 'Anonymous',
 	'reply'			=> 'Reply',
+	'delete'		=> 'Delete',
+	'delete_confirm'=> 'Are you sure you want to delete?',
+	'has_been_deleted'=> 'Has been deleted.',
 	'form' => array(
 		'name'		=> 'Name',
 		'email'		=> 'E-mail',

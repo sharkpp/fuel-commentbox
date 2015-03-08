@@ -248,6 +248,7 @@ class Commentbox
 		$tags['open'] =     \Form::open(array('method' => 'post',
 		                                      'action' => \Uri::create(\Uri::string(), array(), \Input::get())))
 		                    . \Form::csrf()
+		                    . \Form::hidden('action', 'post')
 		                    . \Form::hidden('comment_key', $comment_key);
 		$tags['close'] =    \Form::close();
 
@@ -348,19 +349,36 @@ class Commentbox
 				));
 
 		$avatar = Avatar::forge($this->get_config('avatar', array()));
+		$avatar_deleted = Avatar::forge(
+							\Arr::merge($this->get_config('avatar', array()),
+							            array('service' => 'none' == $this->get_config('avatar.service') ? 'none' : 'blank'))
+							);
 
 		$comments_tmpl = $this->get_template('comments');
+
+		$delete_myself         = $this->get_config('delete_myself', false);
+		$delete_children       = $this->get_config('delete_children', false);
+		$delete_comment_avatar = $this->get_config('delete_comment_avatar', false);
 
 		$depth = -1;
 
 		$this->comment_num = 0;
 
 		$tree2html = function($tree) use ($comments_tmpl, $user_page_empty,
-		                                  &$depth, &$avatar, &$tree2html, $guest_comment) {
+		                                  $delete_myself, $delete_children, $delete_comment_avatar,
+		                                  &$depth, &$avatar, &$avatar_deleted, &$tree2html, $guest_comment) {
 				$html = '';
 				$depth++;
 				foreach ($tree as $item)
 				{
+					$deleted = null != $item['deleted_at'];
+					$delete_with_avatar = $deleted && $delete_comment_avatar;
+
+					if ($deleted && $delete_myself)
+					{
+						continue;
+					}
+
 					$this->comment_num++;
 					$u = $this->get_user_info(
 									$item['user_id'],
@@ -369,8 +387,12 @@ class Commentbox
 										'webpage' => '',
 										'email' => $item['email']
 									));
-					$name       = empty($u['name']) ? __('commentbox.anonymous') : $u['name'];
-					$avatar_img = $avatar->get_html($u['name'], $u['email'], array('class' => 'img-rounded'));
+					$name       = $delete_with_avatar
+									? '' :
+									empty($u['name']) ? __('commentbox.anonymous') : $u['name'];
+					$avatar_img = $delete_with_avatar
+									? $avatar_deleted->get_html($u['name'], $u['email'], array('class' => 'img-rounded'))
+									: $avatar        ->get_html($u['name'], $u['email'], array('class' => 'img-rounded'));
 					$user_page  = $this->replace_tags($this->get_config('user_page', ''), array(
 										'user_id' => -1 == $item['user_id'] ? '' : $item['user_id'],
 										'user_name' => $u['name'],
@@ -380,26 +402,46 @@ class Commentbox
 					$tmpl_name   = 0 < $depth ? 'comments_2nd' : 'comments';
 					$tmpl_default= 0 < $depth ? $comments_tmpl : '';
 					$html .= $this->get_template($tmpl_name, $tmpl_default, array(
-							'body' => $item['body'],
+							'body' => $deleted
+								? $this->get_template('deleted_message', '', array('message' => __('commentbox.has_been_deleted')))
+								: $item['body'],
 							'name' => $name,
 							'name_webpage' => $u['webpage'] ? \Html::anchor($u['webpage'], $name) : $name,
 							'name_userpage' => $user_page ? \Html::anchor($user_page, $name) : $name,
 							'name_email' => $u['email'] ? \Html::anchor('mailto:' . $u['email'], $name) : $name,
 							'email' => $u['email'],
 							'webpage' => $u['webpage'],
-							'time' => \Date::time_ago($item['created_at']),
+							'time' => $delete_with_avatar ? '' : \Date::time_ago($item['created_at']),
 							'avatar' => $avatar_img,
 							'avatar_webpage' => $u['webpage'] ? \Html::anchor($u['webpage'], $avatar_img) : $avatar_img,
 							'avatar_userpage' => $user_page ? \Html::anchor($user_page, $avatar_img) : $avatar_img,
 							'avatar_email' => $u['email'] ? \Html::anchor('mailto:' . $u['email'], $avatar_img) : $avatar_img,
-							'reply_button' => ! $guest_comment ? ''
-							                  : str_replace('{comment_key}', $item['comment_key'],
-							                    str_replace('{reply_caption}', __('commentbox.reply'),
-							                                $this->get_template('comment_reply_button'))),
-							'reply_form' => ! $guest_comment 
+							'reply_button' => $deleted || ! $guest_comment ? ''
+							                  : $this->get_template('comment_reply_button', '', array(
+							                        'comment_key' => $item['comment_key'],
+							                        'reply_caption' => __('commentbox.reply'),
+							                    )),
+							'reply_form' => $deleted || ! $guest_comment 
 							                ? '' : $this->create_form($item['comment_key']),
+							'delete_button' => $deleted || ! $guest_comment ? ''
+							                   : $this->get_template('comment_delete_button', '', array(
+							                         'comment_key' => $item['comment_key'],
+							                         'delete_caption' => __('commentbox.delete'),
+							                         'delete_message' => __('commentbox.delete_message'),
+							                         'delete_form' => 
+							    \Form::open(array('method' => 'post',
+							                      'id' => 'commentbox_delete_form_' . $item['comment_key'],
+							                      'action' => \Uri::create(\Uri::string(), array(), \Input::get()))) .
+							    \Form::csrf() .
+							    \Form::hidden('action', 'delete') .
+							    \Form::hidden('comment_key', $item['comment_key']) .
+							    \Form::submit('send', '', array('style' => 'display: none;')) .
+							    \Form::close(),
+							                     )),
 							'comment_key' => $item['comment_key'],
-							'child' => $tree2html($item['children']),
+							'child' => $deleted && $delete_children
+											? ''
+											: $tree2html($item['children']),
 						));
 				}
 				$depth--;
@@ -437,41 +479,62 @@ class Commentbox
 		}
 
 		$form = $this->fieldset();
+		$val = $form->validation();
 
-		$form->validation()->run($input);
+		$delete_action = 'delete' == \Arr::get(\Arr::merge(\Input::post(), $input?$input:array()), 'action');
 
-		if ( ! $form->validation()->error())
+		// 削除アクション？
+		if ($delete_action)
+		{
+			$val = \Validation::forge('commentbox-delete');
+			$val->add('comment_key', '')
+				->add_rule('required');
+		}
+
+		$val->run($input);
+
+		if ( ! $val->error())
 		{
 			try
 			{
 				\DB::start_transaction();
 
-				// キーとなるハッシュを生成
-				for ($comment_key = \Str::random('alnum', 32);
-				     Model_Commentbox::query()
-				     	->where('comment_key', $comment_key)
-				     	->count();
-				     $comment_key = \Str::random('alnum', 32))
-					continue;
-
-				$parent = Model_Commentbox::get_parent($form->validation()->validated('comment_key', $this->comment_key), true);
-
-				$model = new Model_Commentbox();
-				$model->from_array($form->validation()->validated());
-				$model->comment_key = $comment_key;
-
-				if ($authorized)
+				if ($delete_action)
 				{
-					$model->name = '';
-					$model->email = '';
-					$model->user_id = (int)\Auth::get('id');
+					$model = Model_Commentbox::get_item($val->validated('comment_key'));
+					$model->deleted_at = time();
+					$model->save();
 				}
 				else
 				{
-					$model->user_id = -1;
+					// キーとなるハッシュを生成
+					for ($comment_key = \Str::random('alnum', 32);
+					     Model_Commentbox::query()
+					     	->where('comment_key', $comment_key)
+					     	->count();
+					     $comment_key = \Str::random('alnum', 32))
+						continue;
+	
+					// 親を捜す＆無ければ作成
+					$parent = Model_Commentbox::get_parent($val->validated('comment_key', $this->comment_key), true);
+	
+					$model = new Model_Commentbox();
+					$model->from_array($val->validated());
+					$model->comment_key = $comment_key;
+	
+					if ($authorized)
+					{
+						$model->name = '';
+						$model->email = '';
+						$model->user_id = (int)\Auth::get('id');
+					}
+					else
+					{
+						$model->user_id = -1;
+					}
+	
+					$model->child($parent)->save();
 				}
-
-				$model->child($parent)->save();
 
 				\DB::commit_transaction();
 			}

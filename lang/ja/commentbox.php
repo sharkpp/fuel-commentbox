@@ -5,6 +5,9 @@ return array(
 	'comments_num'	=> ':num コメント',
 	'anonymous'		=> '匿名',
 	'reply'			=> '返信',
+	'delete'		=> '削除',
+	'delete_confirm'=> '削除してもよろしいですか？',
+	'has_been_deleted'=> '削除されました。',
 	'form' => array(
 		'name'		=> '名前',
 		'email'		=> 'メールアドレス',

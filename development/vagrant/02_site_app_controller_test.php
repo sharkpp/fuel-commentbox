@@ -60,6 +60,9 @@ class Controller_Test extends Controller
 		$config = array(
 				'guest' => 'disable' != \Input::get('guest', \Config::get('commentbox.guest') ? 'enable' : 'disable'),
 				'use_fullname' => 'no' != \Input::get('fullname', \Config::get('commentbox.use_fullname') ? 'yes' : 'no'),
+				'delete_myself' => 'false' != \Input::get('delete_myself', \Config::get('commentbox.delete_myself') ? 'true' : 'false'),
+				'delete_children' => 'false' != \Input::get('delete_children', \Config::get('commentbox.delete_children') ? 'true' : 'false'),
+				'delete_comment_avatar' => 'false' != \Input::get('delete_comment_avatar', \Config::get('commentbox.delete_comment_avatar') ? 'true' : 'false'),
 				'active' => \Input::get('theme', \Config::get('commentbox.active')),
 				'recaptcha' => array(
 					'enable' => 'disable' != \Input::get('recaptcha', \Config::get('commentbox.recaptcha.enable') ? 'enable' : 'disable'),

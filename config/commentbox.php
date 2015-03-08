@@ -21,6 +21,15 @@ return array(
 	// use full name for Auth package
 	'use_fullname' => true,
 
+	// delete with myself comment
+	'delete_myself' => false,
+
+	// delete with children comments
+	'delete_children' => false,
+
+	// delete with comment user info
+	'delete_comment_avatar' => true,
+
 	// avatar config
 	'avatar' => array(
 
@@ -177,8 +186,9 @@ EOD
 		//     {webpage}        : display email as plain text
 		//     {time}           : post time
 		//     {body}           : comment body as plain text
-		//     {reply_button}   : reply button, see 'reply_button' template
+		//     {reply_button}   : reply button, see 'comment_reply_button' template
 		//     {reply_form}     : reply form area, see 'form' template
+		//     {delete_button}  : delete button, see 'comment_delete_button' template
 		'comments' =>  <<<EOD
 <hr style="margin-top:10px; margin-bottom:10px;">
 <div class="media">
@@ -189,6 +199,7 @@ EOD
 		<h4 class="media-heading">{name} &nbsp;<small>{time}</small></h4>
 		{body}</br>
 		{reply_button}
+		{delete_button}
 <div class="panel panel-default hidden" style="margin-top: 10px">
 	<div class="panel-body">
 		{reply_form}
@@ -200,12 +211,38 @@ EOD
 EOD
 , // Limitation of heredoc
 
+		// deleted message template
+		//   availabled tags
+		//     {message} : message
+		'deleted_message' => <<<EOD
+<span class="text-muted">{message}</span>
+EOD
+, // Limitation of heredoc
+
 		// comment reply button template
 		//   availabled tags
 		//     {comment_key}   : comment key value
-		//     {reply_caption} : reply caption
+		//     {reply_caption} : reply button caption
 		'comment_reply_button' => <<<EOD
-<a href="#" id="commentbox_reply_button_{comment_key}" onclick="$(this).next().toggleClass('hidden');return false;">{reply_caption}</a>
+<a href="#" class="btn btn-default btn-sm" role="button" style="margin-top: 10px"
+   id="commentbox_reply_button_{comment_key}"
+   onclick="$('#commentbox_recaptcha_{comment_key}').parent().parent().parent().toggleClass('hidden');return false;"
+   ><span class="glyphicon glyphicon-comment"></span> {reply_caption}</a>
+EOD
+, // Limitation of heredoc
+
+		// comment delete button template
+		//   availabled tags
+		//     {comment_key}    : comment key value
+		//     {delete_caption} : delete button caption
+		//     {delete_message} : delete confirm message
+		//     {delete_form}    : delete form, element is form#commentbox_delete_form_{comment_key}
+		'comment_delete_button' => <<<EOD
+<a href="#" class="btn btn-default btn-sm" role="button" style="margin-top: 10px"
+   id="commentbox_delete_button_{comment_key}"
+   onclick="if(window.confirm('{delete_message}')){\$('[id^=\'commentbox_\']').addClass('disabled');\$('#commentbox_delete_form_{comment_key}').trigger('submit');}return false;"
+   ><span class="glyphicon glyphicon-trash"></span> {delete_caption}</a>
+{delete_form}
 EOD
 , // Limitation of heredoc
 
@@ -325,9 +362,27 @@ EOD
 EOD
 , // Limitation of heredoc
 
+		// deleted message template
+		'deleted_message' => <<<EOD
+<span class="text-muted">{message}</span>
+EOD
+, // Limitation of heredoc
+
 		// comment reply button template
 		'comment_reply_button' => <<<EOD
-<a href="#" id="commentbox_reply_button_{comment_key}" onclick="$(this).next().toggleClass('hidden');return false;">{reply_caption}</a>
+<a href="#" id="commentbox_reply_button_{comment_key}"
+   onclick="$('#commentbox_recaptcha_{comment_key}').parent().parent().parent().toggleClass('hidden');return false;"
+   >{reply_caption}</a>
+EOD
+, // Limitation of heredoc
+
+		// comment delete button template
+		'comment_delete_button' => <<<EOD
+<a href="#"
+   id="commentbox_delete_button_{comment_key}"
+   onclick="if(window.confirm('{delete_message}')){\$('[id^=\'commentbox_\']').addClass('disabled');\$('#commentbox_delete_form_{comment_key}').trigger('submit');}return false;"
+   >{delete_caption}</a>
+{delete_form}
 EOD
 , // Limitation of heredoc
 
@@ -475,9 +530,27 @@ EOD
 EOD
 , // Limitation of heredoc
 
+		// deleted message template
+		'deleted_message' => <<<EOD
+<span class="text-muted">{message}</span>
+EOD
+, // Limitation of heredoc
+
 		// comment reply button template
 		'comment_reply_button' => <<<EOD
-<a href="#" id="commentbox_reply_button_{comment_key}" onclick="$(this).next().toggleClass('hidden');return false;">{reply_caption}</a>
+<a href="#" id="commentbox_reply_button_{comment_key}"
+   onclick="$('#commentbox_recaptcha_{comment_key}').parent().parent().parent().toggleClass('hidden');return false;"
+   >{reply_caption}</a>
+EOD
+, // Limitation of heredoc
+
+		// comment delete button template
+		'comment_delete_button' => <<<EOD
+<a href="#"
+   id="commentbox_delete_button_{comment_key}"
+   onclick="if(window.confirm('{delete_message}')){\$('[id^=\'commentbox_\']').addClass('disabled');\$('#commentbox_delete_form_{comment_key}').trigger('submit');}return false;"
+   >{delete_caption}</a>
+{delete_form}
 EOD
 , // Limitation of heredoc
 

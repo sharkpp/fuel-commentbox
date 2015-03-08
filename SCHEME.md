@@ -6,12 +6,12 @@
 
 ## ToDo
 
-* テンプレート
-	* <del>Youtube 風</del>
-	* <del>[Isso – a commenting server similar to Disqus](http://posativ.org/isso/) 風</del>
-	* <del>[Disqus](https://disqus.com/home/discussion/techcrunchjapan/apple_techcrunch_26/) 風</del>
-	* <del>[スタック・オーバーフロー](http://ja.stackoverflow.com/questions/7365/) 風</del>
 * モデレート
+* コメントの編集
+* コメントの削除
+	* 未ログイン時は書き込み時のパスワード入力で削除
+* コメントの管理者の削除
+* テーブル内の検索処理のヘルパメソッド
 
 ## 機能
 
