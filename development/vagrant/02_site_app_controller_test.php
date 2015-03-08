@@ -60,6 +60,7 @@ class Controller_Test extends Controller
 		$config = array(
 				'guest' => 'disable' != \Input::get('guest', \Config::get('commentbox.guest') ? 'enable' : 'disable'),
 				'use_fullname' => 'no' != \Input::get('fullname', \Config::get('commentbox.use_fullname') ? 'yes' : 'no'),
+				'use_delete' => 'false' != \Input::get('use_delete', \Config::get('commentbox.use_delete') ? 'true' : 'false'),
 				'delete_without_trace' => 'false' != \Input::get('delete_without_trace', \Config::get('commentbox.delete_without_trace') ? 'true' : 'false'),
 				'delete_descendants' => 'false' != \Input::get('delete_descendants', \Config::get('commentbox.delete_descendants') ? 'true' : 'false'),
 				'delete_comment_avatar' => 'false' != \Input::get('delete_comment_avatar', \Config::get('commentbox.delete_comment_avatar') ? 'true' : 'false'),

@@ -21,6 +21,9 @@ return array(
 	// use full name for Auth package
 	'use_fullname' => true,
 
+	// use delete comment button
+	'use_delete' => true,
+
 	// also be deleted without a trace
 	'delete_without_trace' => false,
 

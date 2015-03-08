@@ -360,8 +360,9 @@ class Commentbox
 
 		$user_id = $authorized ? (int)\Auth::get('id') : -2;
 
-		$delete_without_trace  = $this->get_config('delete_without_trace', false);
-		$delete_descendants    = $this->get_config('delete_descendants', false);
+		$use_delete            = $this->get_config('use_delete',            true);
+		$delete_without_trace  = $this->get_config('delete_without_trace',  false);
+		$delete_descendants    = $this->get_config('delete_descendants',    false);
 		$delete_comment_avatar = $this->get_config('delete_comment_avatar', false);
 
 		$depth = -1;
@@ -369,7 +370,7 @@ class Commentbox
 		$this->comment_num = 0;
 
 		$tree2html = function($tree) use ($comments_tmpl, $user_page_empty, $authorized, $user_id,
-		                                  $delete_without_trace, $delete_descendants, $delete_comment_avatar,
+		                                  $use_delete, $delete_without_trace, $delete_descendants, $delete_comment_avatar,
 		                                  &$depth, &$avatar, &$avatar_deleted, &$tree2html, $guest_comment) {
 				$html = '';
 				$depth++;
@@ -402,7 +403,7 @@ class Commentbox
 										'user_name' => $u['name'],
 									));
 					$user_page  = $user_page == $user_page_empty ? '' : $user_page;
-					$has_delete_perm = ! $authorized
+					$has_delete_perm = ! $authorized || ! $use_delete
 											? false
 											: $item['user_id'] == $user_id;
 
@@ -430,7 +431,7 @@ class Commentbox
 							                    )),
 							'reply_form' => $deleted || ! $guest_comment 
 							                ? '' : $this->create_form($item['comment_key']),
-							'delete_button' => !$has_delete_perm || $deleted || ! $guest_comment ? ''
+							'delete_button' => ! $has_delete_perm || $deleted || ! $guest_comment ? ''
 							                   : $this->get_template('comment_delete_button', '', array(
 							                         'comment_key' => $item['comment_key'],
 							                         'delete_caption' => __('commentbox.delete'),
@@ -511,7 +512,7 @@ class Commentbox
 					if (null != ($model = Model_Commentbox::get_item($val->validated('comment_key'))))
 					{
 						$has_delete_perm
-							= ! $authorized
+							= ! $authorized || ! $this->get_config('use_delete')
 								? false
 								: $model->user_id == (int)\Auth::get('id');
 						if ($has_delete_perm)

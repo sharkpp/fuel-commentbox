@@ -142,6 +142,14 @@ function is_active($key, $value, $default = '')
   </li>
 
   <li class="">
+    <a href="#" class="bg-primary">use delete</a>
+    <ul class="nav">
+      <li><a href="<?php echo get_url('use_delete', 'true'); ?>"><i class="<?php echo is_active('use_delete', 'true', 'true'); ?>"></i> true</a></li>
+      <li><a href="<?php echo get_url('use_delete', 'false'); ?>"><i class="<?php echo is_active('use_delete', 'false', 'true'); ?>"></i> false</a></li>
+    </ul>
+  </li>
+
+  <li class="">
     <a href="#" class="bg-primary">delete without a trace</a>
     <ul class="nav">
       <li><a href="<?php echo get_url('delete_without_trace', 'true'); ?>"><i class="<?php echo is_active('delete_without_trace', 'true', 'false'); ?>"></i> true</a></li>
