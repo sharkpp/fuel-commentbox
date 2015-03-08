@@ -142,18 +142,18 @@ function is_active($key, $value, $default = '')
   </li>
 
   <li class="">
-    <a href="#" class="bg-primary">delete myself</a>
+    <a href="#" class="bg-primary">delete without a trace</a>
     <ul class="nav">
-      <li><a href="<?php echo get_url('delete_myself', 'true'); ?>"><i class="<?php echo is_active('delete_myself', 'true', 'false'); ?>"></i> true</a></li>
-      <li><a href="<?php echo get_url('delete_myself', 'false'); ?>"><i class="<?php echo is_active('delete_myself', 'false', 'false'); ?>"></i> false</a></li>
+      <li><a href="<?php echo get_url('delete_without_trace', 'true'); ?>"><i class="<?php echo is_active('delete_without_trace', 'true', 'false'); ?>"></i> true</a></li>
+      <li><a href="<?php echo get_url('delete_without_trace', 'false'); ?>"><i class="<?php echo is_active('delete_without_trace', 'false', 'false'); ?>"></i> false</a></li>
     </ul>
   </li>
 
   <li class="">
     <a href="#" class="bg-primary">delete children</a>
     <ul class="nav">
-      <li><a href="<?php echo get_url('delete_children', 'true'); ?>"><i class="<?php echo is_active('delete_children', 'true', 'false'); ?>"></i> true</a></li>
-      <li><a href="<?php echo get_url('delete_children', 'false'); ?>"><i class="<?php echo is_active('delete_children', 'false', 'false'); ?>"></i> false</a></li>
+      <li><a href="<?php echo get_url('delete_descendants', 'true'); ?>"><i class="<?php echo is_active('delete_descendants', 'true', 'false'); ?>"></i> true</a></li>
+      <li><a href="<?php echo get_url('delete_descendants', 'false'); ?>"><i class="<?php echo is_active('delete_descendants', 'false', 'false'); ?>"></i> false</a></li>
     </ul>
   </li>
 

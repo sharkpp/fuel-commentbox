@@ -333,8 +333,10 @@ class Commentbox
 	*/
 	public function comments()
 	{
+		$authorized = \Auth::check();
+
 		// ゲストの書き込み許可
-		$guest_comment = \Auth::check() ||
+		$guest_comment = $authorized ||
 		                 $this->get_config('guest', false);
 
 		$form = $this->fieldset();
@@ -356,16 +358,18 @@ class Commentbox
 
 		$comments_tmpl = $this->get_template('comments');
 
-		$delete_myself         = $this->get_config('delete_myself', false);
-		$delete_children       = $this->get_config('delete_children', false);
+		$user_id = $authorized ? (int)\Auth::get('id') : -2;
+
+		$delete_without_trace  = $this->get_config('delete_without_trace', false);
+		$delete_descendants    = $this->get_config('delete_descendants', false);
 		$delete_comment_avatar = $this->get_config('delete_comment_avatar', false);
 
 		$depth = -1;
 
 		$this->comment_num = 0;
 
-		$tree2html = function($tree) use ($comments_tmpl, $user_page_empty,
-		                                  $delete_myself, $delete_children, $delete_comment_avatar,
+		$tree2html = function($tree) use ($comments_tmpl, $user_page_empty, $authorized, $user_id,
+		                                  $delete_without_trace, $delete_descendants, $delete_comment_avatar,
 		                                  &$depth, &$avatar, &$avatar_deleted, &$tree2html, $guest_comment) {
 				$html = '';
 				$depth++;
@@ -374,7 +378,7 @@ class Commentbox
 					$deleted = null != $item['deleted_at'];
 					$delete_with_avatar = $deleted && $delete_comment_avatar;
 
-					if ($deleted && $delete_myself)
+					if ($deleted && $delete_without_trace)
 					{
 						continue;
 					}
@@ -398,6 +402,9 @@ class Commentbox
 										'user_name' => $u['name'],
 									));
 					$user_page  = $user_page == $user_page_empty ? '' : $user_page;
+					$has_delete_perm = ! $authorized
+											? false
+											: $item['user_id'] == $user_id;
 
 					$tmpl_name   = 0 < $depth ? 'comments_2nd' : 'comments';
 					$tmpl_default= 0 < $depth ? $comments_tmpl : '';
@@ -423,7 +430,7 @@ class Commentbox
 							                    )),
 							'reply_form' => $deleted || ! $guest_comment 
 							                ? '' : $this->create_form($item['comment_key']),
-							'delete_button' => $deleted || ! $guest_comment ? ''
+							'delete_button' => !$has_delete_perm || $deleted || ! $guest_comment ? ''
 							                   : $this->get_template('comment_delete_button', '', array(
 							                         'comment_key' => $item['comment_key'],
 							                         'delete_caption' => __('commentbox.delete'),
@@ -439,7 +446,7 @@ class Commentbox
 							    \Form::close(),
 							                     )),
 							'comment_key' => $item['comment_key'],
-							'child' => $deleted && $delete_children
+							'child' => $deleted && $delete_descendants
 											? ''
 											: $tree2html($item['children']),
 						));
@@ -500,13 +507,22 @@ class Commentbox
 				\DB::start_transaction();
 
 				if ($delete_action)
-				{
-					$model = Model_Commentbox::get_item($val->validated('comment_key'));
-					$model->deleted_at = time();
-					$model->save();
+				{ // 削除処理
+					if (null != ($model = Model_Commentbox::get_item($val->validated('comment_key'))))
+					{
+						$has_delete_perm
+							= ! $authorized
+								? false
+								: $model->user_id == (int)\Auth::get('id');
+						if ($has_delete_perm)
+						{
+							$model->deleted_at = time();
+							$model->save();
+						}
+					}
 				}
 				else
-				{
+				{ // 投稿処理
 					// キーとなるハッシュを生成
 					for ($comment_key = \Str::random('alnum', 32);
 					     Model_Commentbox::query()

@@ -21,13 +21,13 @@ return array(
 	// use full name for Auth package
 	'use_fullname' => true,
 
-	// delete with myself comment
-	'delete_myself' => false,
+	// also be deleted without a trace
+	'delete_without_trace' => false,
 
-	// delete with children comments
-	'delete_children' => false,
+	// delete descendants comments
+	'delete_descendants' => false,
 
-	// delete with comment user info
+	// delete user information in comment
 	'delete_comment_avatar' => true,
 
 	// avatar config
