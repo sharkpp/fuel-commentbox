@@ -57,6 +57,9 @@ Display of the default form template is as follows.
 | `'table_name'`           | `'commentboxes'` | table name |
 | `'guest'`                |      `true`      | permission of guest comment |
 | `'use_fullname'`         |      `true`      | use full name for Auth package |
+| `'delete_without_trace'` |      `false`     | also be deleted without a trace |
+| `'delete_descendants'`   |      `false`     | delete descendants comments |
+| `'delete_comment_avatar'`|      `true`      | delete user information in comment |
 | `'avatar'`               |                  | avatar config |
 | `'avatar.size'`          |       `48`       | avatar icon size |
 | `'avatar.service'`       |   `'gravatar'`   | avatar service ( `none` or `blank` or `gravatar` or  `robohash` or `adorable` ) |

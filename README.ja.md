@@ -57,6 +57,9 @@
 | `'table_name'`           | `'commentboxes'` | テーブル名 |
 | `'guest'`                |      `true`      | ゲストコメントの許可 |
 | `'use_fullname'`         |      `true`      | Auth パッケージの完全な名前を使用する |
+| `'delete_without_trace'` |      `false`     | 跡形も無く削除する |
+| `'delete_descendants'`   |      `false`     | 子孫コメントを削除 |
+| `'delete_comment_avatar'`|      `true`      | コメント内のユーザー情報を削除 |
 | `'avatar'`               |                  | アバター設定 |
 | `'avatar.size'`          |       `48`       | アバターのアイコンサイズ |
 | `'avatar.service'`       |   `'gravatar'`   | アバターサービス ( `none` か `blank` か `gravatar` か  `robohash` か `adorable` ) |
